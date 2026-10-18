@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pos Soal</title>
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--mut:#6b6b6b;--line:#e2e2e2;--soft:#f5f5f5;
+--ok:#d6f0d6;--okfg:#17501c;--wait:#fff0b3;--waitfg:#6b4e00;--out:#f8d4d4;--outfg:#8a1c1c;--done:#666}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--fg);background:var(--bg)}
+a{color:inherit}
+header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:8px;padding:8px 12px;flex-wrap:wrap}
+.brand{font-weight:600;margin-right:4px}
+.posb{font-weight:600;padding:5px 12px;background:var(--fg);color:#fff;border-radius:6px}
+.back{padding:6px 10px;border:1px solid var(--line);border-radius:6px;text-decoration:none}
+.sp{flex:1}
+.dot{width:9px;height:9px;border-radius:50%;background:#c33;display:inline-block}
+.dot.on{background:#2a9d3a}
+.who{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:6px;background:#fff;padding:6px 10px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+main{padding:12px;max-width:900px;margin:0 auto}
+
+/* ===== HOMEPAGE: Glow Card Spotlight Pos Buttons ===== */
+.posgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:20px;padding:8px 0}
+
+/* Wrapper: provides the glowing border via padding + background gradient */
+.glow-wrap{
+  position:relative;
+  border-radius:18px;
+  padding:2px; /* border thickness */
+  background:hsl(220 15% 82% / 0.7); /* fallback border */
+  box-shadow:0 4px 24px -6px rgba(0,0,0,0.12);
+  transition:box-shadow 0.25s ease, transform 0.2s ease;
+  cursor:pointer;
+}
+.glow-wrap:hover{
+  transform:translateY(-5px) scale(1.03);
+}
+.glow-wrap:active{transform:translateY(-1px) scale(0.99)}
+
+/* Inner card */
+[data-glow-card]{
+  position:relative;
+  cursor:pointer;
+  font:inherit;
+  width:100%;
+  aspect-ratio:1/1.15;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border:none;
+  border-radius:16px; /* 18-2=16 so inner radius matches */
+  background:#f8f8fb;
+  overflow:hidden;
+  touch-action:none;
+  transition:background 0.2s ease;
+}
+
+.pos-letter{font-size:46px;font-weight:800;line-height:1;letter-spacing:-1px;color:var(--fg);position:relative;z-index:1}
+.pos-sub{font-size:12px;color:var(--mut);font-weight:500;position:relative;z-index:1}
+
+/* Homepage title */
+.home-title{font-size:22px;font-weight:700;margin:8px 0 16px;letter-spacing:-0.3px}
+.home-title span{color:var(--mut);font-size:13px;font-weight:400;margin-left:8px}
+
+/* ===== ACTION BUTTONS: Interactive Hover Animation ===== */
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.tims{display:grid;grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:6px;margin-bottom:14px}
+.tim{display:block;text-align:center;padding:6px 0;border:1px solid var(--line);border-radius:6px;text-decoration:none;line-height:1.2}
+.tim b{display:block;font-size:16px}
+.tim small{color:var(--mut);font-size:11px}
+.tim.on{background:var(--fg);color:#fff;border-color:var(--fg)}
+.tim.on small{color:#ccc}
+h2{font-size:17px;margin:4px 0 10px}
+h3{font-size:14px;margin:18px 0 8px;color:var(--mut);font-weight:600}
+.head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.head h2{margin:0}
+.bal{font-size:15px}
+.bal b{font-size:20px}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left}
+th{background:var(--soft);font-weight:600;font-size:13px}
+td.n,th.n{text-align:right}
+.sum{width:auto;min-width:340px;margin-bottom:6px}
+.grp td{background:var(--soft);font-weight:600;font-size:13px;color:var(--mut)}
+.code{font-weight:600;white-space:nowrap}
+.code small{display:block;font-weight:400;font-size:11px;color:var(--mut)}
+.st{font-size:13px;font-weight:600;white-space:nowrap}
+.st small{display:block;font-weight:400;opacity:.8}
+.ok{background:var(--ok);color:var(--okfg)}
+.wait{background:var(--wait);color:var(--waitfg)}
+.out{background:var(--out);color:var(--outfg)}
+.done{background:var(--done);color:#fff}
+td.act{padding:4px;text-align:center}
+button{font:inherit;cursor:pointer}
+
+/* Interactive hover button base */
+.a{
+  position:relative;
+  min-width:72px;min-height:36px;
+  padding:4px 14px;
+  border:1.5px solid #c0c0c0;
+  border-radius:20px;
+  background:#fff;
+  color:var(--fg);
+  display:inline-flex;
+  align-items:center;justify-content:center;
+  overflow:hidden;
+  font-weight:600;font-size:13px;
+  white-space:nowrap;
+}
+/* sliding label (visible by default) */
+.a .a-label{
+  position:relative;z-index:2;
+  display:inline-flex;align-items:center;gap:4px;
+  transition:transform 0.28s cubic-bezier(.4,0,.2,1), opacity 0.28s ease;
+  pointer-events:none;
+}
+/* sliding hover label (hidden by default, comes from right) */
+.a .a-hover{
+  position:absolute;inset:0;z-index:2;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  color:#fff;
+  opacity:0;
+  transform:translateX(110%);
+  transition:transform 0.28s cubic-bezier(.4,0,.2,1), opacity 0.2s ease;
+  font-weight:600;font-size:13px;
+  pointer-events:none;
+}
+/* expanding blob background */
+.a .a-blob{
+  position:absolute;
+  left:22%;top:50%;
+  width:8px;height:8px;
+  border-radius:50%;
+  background:var(--blob-color,#1a1a1a);
+  z-index:1;
+  transform:translate(-50%,-50%) scale(1);
+  transition:left 0.28s cubic-bezier(.4,0,.2,1),
+             top 0.28s cubic-bezier(.4,0,.2,1),
+             width 0.28s cubic-bezier(.4,0,.2,1),
+             height 0.28s cubic-bezier(.4,0,.2,1),
+             border-radius 0.28s ease,
+             transform 0.28s cubic-bezier(.4,0,.2,1);
+}
+/* hover state transitions */
+.a:not(:disabled):hover .a-label{
+  transform:translateX(-110%);
+  opacity:0;
+}
+.a:not(:disabled):hover .a-hover{
+  transform:translateX(0);
+  opacity:1;
+}
+.a:not(:disabled):hover .a-blob{
+  left:50%;top:50%;
+  width:300%;height:300%;
+  border-radius:50%;
+  transform:translate(-50%,-50%) scale(1.2);
+}
+.a:active:not(:disabled){filter:brightness(0.88)}
+.a:disabled{opacity:.35;cursor:not-allowed}
+.a b{font-weight:700;min-width:1ch;position:relative;z-index:3}
+
+/* Blob colors per action */
+.a-beli{--blob-color:#2563eb}
+.a-salah{--blob-color:#dc2626}
+.a-benar{--blob-color:#16a34a}
+
+/* done row overrides */
+.done .a{background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.4)}
+.done .a .a-blob{background:rgba(255,255,255,0.35)}
+.done .a:not(:disabled):hover .a-hover{color:var(--fg)}
+
+/* undo button */
+.u{min-height:36px;min-width:36px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--mut);transition:background 0.15s,color 0.15s}
+.u:not(:disabled):hover{background:var(--soft);color:var(--fg)}
+.u:disabled{opacity:.3;cursor:not-allowed}
+
+.stock{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px}
+.sc{border:1px solid var(--line);border-radius:6px;padding:6px 8px;text-align:center}
+.sc b{display:block}
+.sc.zero{background:var(--out);color:var(--outfg);border-color:transparent}
+.btn{display:inline-block;padding:9px 14px;border:1px solid var(--fg);border-radius:6px;text-decoration:none;margin-top:10px}
+.scroll{overflow-x:auto}
+.mut{color:var(--mut)}
+.struck{text-decoration:line-through;color:var(--mut)}
+.pos{color:#17701f}.neg{color:#a32020}
+#toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--fg);color:#fff;padding:9px 14px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;max-width:90%}
+#toast.on{opacity:1}
+#ask{position:fixed;inset:0;background:rgba(255,255,255,.97);z-index:20;display:flex;align-items:center;justify-content:center;padding:16px}
+#ask[hidden]{display:none}
+#ask form{width:100%;max-width:320px}
+#ask input{width:100%;font:inherit;padding:10px;border:1px solid #bbb;border-radius:6px;margin:10px 0}
+#ask button{font:inherit;width:100%;padding:10px;border:0;border-radius:6px;background:var(--fg);color:#fff}
+
+@media(max-width:520px){
+  main{padding:8px}
+  th,td{padding:4px 3px}
+  td.act{padding:3px 2px}
+  .a{min-width:0;padding:4px 8px;font-size:12px;border-radius:16px}
+  .u{min-width:30px;width:30px;padding:0}
+  .st{font-size:12px;white-space:normal}
+  .st small{font-size:11px}
+  .code{font-size:14px}
+  .posgrid{grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:12px}
+  .pos-letter{font-size:36px}
+}
+</style>
+</head>
+<body>
+<header><div class="bar" id="head"></div></header>
+<main id="main"><p class="mut">Memuat…</p></main>
+<div id="toast"></div>
+<div id="ask" hidden><form id="askf"><b>Nama / ID</b><div class="mut">Dipakai untuk mencatat siapa yang menekan tombol di log.</div><input id="askin" maxlength="30" autocomplete="off" required><button>Mulai</button></form></div>
+<script>
+'use strict';
+var user = '', pos = '', S = null, conn = false, view = { v: 'home' }, busy = {};
+var $ = function (s) { return document.querySelector(s); };
+var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); };
+function store(k, v) { try { if (v === null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, v); } catch (e) {} }
+function sget(k) { try { return sessionStorage.getItem(k) || ''; } catch (e) { return ''; } }
+function sign(n) { return n > 0 ? '+' + n : n < 0 ? '−' + (-n) : '0'; }
+
+/* ---------- Glow card: drive border gradient on each wrapper ---------- */
+document.addEventListener('pointermove', function (e) {
+  var wraps = document.querySelectorAll('.glow-wrap');
+  var mx = e.clientX, my = e.clientY;
+  /* hue shifts 0-360 based on horizontal position */
+  var hue = Math.round(200 + (mx / window.innerWidth) * 160);
+  for (var i = 0; i < wraps.length; i++) {
+    var rect = wraps[i].getBoundingClientRect();
+    /* position of cursor relative to this wrapper */
+    var lx = mx - rect.left;
+    var ly = my - rect.top;
+    /* size of the glow spot: ~1.5× the card diagonal */
+    var spot = Math.round(Math.sqrt(rect.width * rect.width + rect.height * rect.height) * 1.5);
+    wraps[i].style.backgroundImage =
+      'radial-gradient(' + spot + 'px ' + spot + 'px at ' + lx + 'px ' + ly + 'px, ' +
+      'hsl(' + hue + ' 100% 65% / 0.95), transparent 70%)';
+    wraps[i].style.boxShadow =
+      '0 0 0 0.5px hsl(' + hue + ' 60% 70% / 0.4), ' +
+      '0 6px 28px -6px rgba(0,0,0,0.15), ' +
+      '0 0 20px -4px hsl(' + hue + ' 100% 70% / 0.25)';
+  }
+});
+
+/* ---------- routing ---------- */
+function parseHash() {
+  var h = location.hash.slice(1);
+  if (pos) {
+    var m = /^([A-E])\/(\d+)$/.exec(h), t = 1;
+    if (m && m[1] === pos && +m[2] >= 1 && +m[2] <= 15) t = +m[2];
+    else t = +sget('tim' + pos) || 1;
+    return { v: 'team', t: t };
+  }
+  if (h === 'dash' || h === 'log' || h === 'hasil') return { v: h };
+  return { v: 'home' };
+}
+function route() { view = parseHash(); if (view.v === 'team') store('tim' + pos, view.t); render(); window.scrollTo(0, 0); }
+function go(h) { if (location.hash === '#' + h) route(); else location.hash = h; }
+window.addEventListener('hashchange', route);
+function enterPos(p) { pos = p; store('pos', p); go(p + '/' + (+sget('tim' + p) || 1)); }
+function exitPos() { pos = ''; store('pos', null); go('home'); }
+
+/* ---------- data ---------- */
+function row(p, t, c) { return S.rows[p + '|' + t + '|' + c] || [0, 0, 0]; }
+function left(code) { return S.cmap[code].limit - (S.used[code] || 0); }
+function bal(p, t) { return S.saldo[p + '|' + t]; }
+function stat(p, t, c) {
+  var r = row(p, t, c.code);
+  if (r[2] >= 1) return { cls: 'done', txt: 'Selesai (Benar)' };
+  if (r[0] > r[1]) return { cls: 'wait', txt: 'Menunggu Jawaban' };
+  if (left(c.code) <= 0) return { cls: 'out', txt: 'HABIS' };
+  return { cls: 'ok', txt: 'Tersedia' };
+}
+function loadState() {
+  return fetch('/api/state', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
+    d.cmap = {}; d.codes.forEach(function (c) { d.cmap[c.code] = c; });
+    S = d; render();
+  }).catch(function () {});
+}
+function applyEvent(ev) {
+  if (!S || ev.n <= S.seq) return;
+  if (ev.n !== S.seq + 1) { loadState(); return; }
+  S.rows[ev.row[0] + '|' + ev.row[1] + '|' + ev.row[2]] = [ev.row[3], ev.row[4], ev.row[5]];
+  S.used[ev.used[0]] = ev.used[1];
+  S.saldo[ev.bal[0] + '|' + ev.bal[1]] = ev.bal[2];
+  if (ev.undid) S.log.forEach(function (l) { if (l.n === ev.undid) l.undone = true; });
+  S.log.unshift(ev.log); if (S.log.length > 500) S.log.pop();
+  S.seq = ev.n; render();
+}
+function connect() {
+  var es = new EventSource('/api/stream');
+  es.onopen = function () { conn = true; dot(); loadState(); };
+  es.onmessage = function (e) { applyEvent(JSON.parse(e.data)); };
+  es.onerror = function () { conn = false; dot(); };
+}
+function dot() { var d = $('#dot'); if (d) { d.className = 'dot' + (conn ? ' on' : ''); d.title = conn ? 'Terhubung' : 'Terputus'; } }
+
+/* ---------- aksi ---------- */
+function toast(m) { var t = $('#toast'); t.textContent = m; t.className = 'on'; clearTimeout(toast.h); toast.h = setTimeout(function () { t.className = ''; }, 2600); }
+function rid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+function send(path, a, code) {
+  var key = pos + view.t + code; if (busy[key]) return; busy[key] = 1;
+  fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: rid(), user: user, pos: pos, tim: view.t, code: code, act: a }) })
+    .then(function (r) { return r.json(); })
+    .then(function (d) { if (d.ok) { applyEvent(d.ev); if (d.ev.log.warn) toast('\u26a0 ' + d.ev.log.warn); } else toast(d.err); })
+    .catch(function () { toast('Gagal terkirim \u2014 cek koneksi WiFi'); })
+    .then(function () { delete busy[key]; });
+}
+document.addEventListener('click', function (e) {
+  var t = e.target;
+  var p = t.closest('button[data-pos]'); if (p) { enterPos(p.dataset.pos); return; }
+  if (t.id === 'exit') { exitPos(); return; }
+  if (t.id === 'who') { askName(); return; }
+  var b = t.closest('button[data-c]'); if (!b || b.disabled || !pos) return;
+  if (b.dataset.a === 'undo') send('/api/undo', 'undo', b.dataset.c); else send('/api/act', b.dataset.a, b.dataset.c);
+});
+
+/* ---------- tampilan ---------- */
+function render() {
+  if (!S || !user) return;
+  var h = '<span class="brand">Pos Soal</span>';
+  if (pos) h += '<span class="posb">Pos ' + pos + '</span><span class="sp"></span><button class="who" id="exit">\u2190 Keluar Pos</button>';
+  else { if (view.v !== 'home') h += '<a class="back" href="#home">\u2190 Beranda</a>'; h += '<span class="sp"></span>'; }
+  h += '<button class="who" id="who" title="Ganti nama/ID">' + esc(user) + '</button><span id="dot" class="dot"></span>';
+  $('#head').innerHTML = h; dot();
+  $('#main').innerHTML = view.v === 'team' ? teamHTML(pos, view.t) : view.v === 'dash' ? dashHTML() : view.v === 'log' ? logHTML() : view.v === 'hasil' ? hasilHTML() : homeHTML();
+}
+
+function homeHTML() {
+  var h = '<h2 class="home-title">Pilih Pos <span>Arahkan kursor ke kartu</span></h2><div class="posgrid">';
+  S.pos.forEach(function (p) {
+    h += '<div class="glow-wrap">'
+      + '<button data-glow-card data-pos="' + p + '" aria-label="Masuk Pos ' + p + '">'
+      + '<span class="pos-letter">' + p + '</span>'
+      + '<span class="pos-sub">Pos ' + p + '</span>'
+      + '</button>'
+      + '</div>';
+  });
+  h += '</div><h3>Pantau</h3><div class="links">'
+    + '<a class="btn" href="#hasil">Hasil Akhir</a>'
+    + '<a class="btn" href="#dash">Dashboard</a>'
+    + '<a class="btn" href="#log">Log</a>'
+    + '</div>';
+  return h;
+}
+
+function teamHTML(p, t) {
+  var h = '<div class="tims">';
+  for (var i = 1; i <= S.tim; i++) h += '<a class="tim' + (i === t ? ' on' : '') + '" href="#' + p + '/' + i + '"><b>' + i + '</b><small' + (bal(p, i) < 0 ? ' style="color:#d33"' : '') + '>' + bal(p, i) + '</small></a>';
+  h += '</div><div class="head"><h2>' + p + '-' + t + '</h2><div class="bal">Saldo ' + p + '-' + t + ': <b class="' + (bal(p, t) < 0 ? 'neg' : '') + '">' + bal(p, t) + '</b> Neleci</div></div>';
+  h += '<div class="scroll"><table><tr><th>Kode</th><th>Status</th><th>Beli</th><th>Salah</th><th>Benar</th><th></th></tr>';
+  var cur = '';
+  S.codes.forEach(function (c) {
+    if (c.cat !== cur) { cur = c.cat; h += '<tr class="grp"><td colspan="6">' + cur + ' \u00b7 stok global ' + c.limit + ' per soal</td></tr>'; }
+    var r = row(p, t, c.code), s = stat(p, t, c), fz = r[2] >= 1, lf = left(c.code), any = r[0] + r[1] + r[2] > 0;
+    var cn = fz ? ' done' : '';
+    var okSB = !fz && (r[1] + r[2] + 1 <= r[0]);
+    h += '<tr>'
+      + '<td class="code">' + c.code + '<small>' + sign(-c.price) + ' / ' + sign(c.reward) + '</small></td>'
+      + '<td class="st ' + s.cls + '">' + s.txt + '<small>Stok ' + lf + '/' + c.limit + '</small></td>'
+      + '<td class="act' + cn + '">' + btn('beli',  c.code, 'Beli',  r[0], fz || lf <= 0 || r[0] > r[1]) + '</td>'
+      + '<td class="act' + cn + '">' + btn('salah', c.code, 'Salah', r[1], !okSB) + '</td>'
+      + '<td class="act' + cn + '">' + btn('benar', c.code, 'Benar', r[2], !okSB) + '</td>'
+      + '<td class="act"><button class="u" data-a="undo" data-c="' + c.code + '" title="Batalkan aksi terakhir"' + (any ? '' : ' disabled') + '>\u21a9</button></td>'
+      + '</tr>';
+  });
+  h += '</table></div><h3>Rekap</h3><table class="sum"><tr><th>Kategori</th><th>Kode</th><th class="n">Jumlah Benar</th></tr>';
+  var all = 0;
+  [['Essential','H'],['Essential','N'],['Essential','P'],['Non-Essential','L'],['Non-Essential','T'],['Non-Essential','M']].forEach(function (g) {
+    var n = S.codes.filter(function (c) { return c.grp === g[1] && row(p, t, c.code)[2] >= 1; }).length; all += n;
+    h += '<tr><td>' + g[0] + '</td><td>' + g[1] + '</td><td class="n">' + n + '</td></tr>';
+  });
+  return h + '<tr><th colspan="2">Total</th><th class="n">' + all + '</th></tr></table>'
+    + '<p class="mut" style="font-size:12px">Di bawah kode soal: harga beli / reward Benar (Neleci). Saldo kurang tetap bisa Beli, tapi diberi peringatan dan dicatat di Log.</p>';
+}
+
+function btn(a, code, label, n, dis) {
+  var colorCls = a === 'beli' ? 'a-beli' : a === 'salah' ? 'a-salah' : 'a-benar';
+  var icon = a === 'beli' ? '\uD83D\uDED2' : a === 'salah' ? '\u2717' : '\u2713';
+  var count = n ? '<b>' + n + '</b>' : '';
+  return '<button class="a ' + colorCls + '" data-a="' + a + '" data-c="' + code + '"' + (dis ? ' disabled' : '') + '>'
+    + '<span class="a-label">' + label + count + '</span>'
+    + '<span class="a-hover">' + icon + '\u00a0' + label + count + '</span>'
+    + '<span class="a-blob"></span>'
+    + '</button>';
+}
+
+function hasilHTML() {
+  var T = {};
+  S.pos.forEach(function (p) { for (var i = 1; i <= S.tim; i++) T[p + '|' + i] = { pos: p, tim: i, saldo: bal(p, i), beli: 0, salah: 0, benar: 0, keluar: 0, masuk: 0 }; });
+  for (var k in S.rows) {
+    var q = k.split('|'), r = S.rows[k], c = S.cmap[q[2]], x = T[q[0] + '|' + q[1]];
+    x.beli += r[0]; x.salah += r[1]; x.benar += r[2]; x.keluar += r[0] * c.price; x.masuk += r[2] * c.reward;
+  }
+  var h = '<h2>Hasil Akhir</h2><p class="mut">Tiap pos-tim punya saldo sendiri (awal ' + S.start + ' Neleci), diurut dari saldo tertinggi per pos.</p>';
+  S.pos.forEach(function (p) {
+    var L = []; for (var i = 1; i <= S.tim; i++) L.push(T[p + '|' + i]);
+    L.sort(function (a, b) { return b.saldo - a.saldo || a.tim - b.tim; });
+    h += '<h3>Pos ' + p + '</h3><div class="scroll"><table><tr><th class="n">#</th><th>Tim</th><th class="n">Saldo</th><th class="n">Beli</th><th class="n">Salah</th><th class="n">Benar</th><th class="n">Keluar</th><th class="n">Masuk</th></tr>';
+    var rank = 0, prev = null;
+    L.forEach(function (x, idx) {
+      if (x.saldo !== prev) rank = idx + 1; prev = x.saldo;
+      h += '<tr><td class="n">' + rank + '</td><td>' + p + '-' + x.tim + '</td><td class="n ' + (x.saldo < 0 ? 'neg' : '') + '"><b>' + x.saldo + '</b></td><td class="n">' + x.beli + '</td><td class="n">' + x.salah + '</td><td class="n">' + x.benar + '</td><td class="n">' + x.keluar + '</td><td class="n">' + x.masuk + '</td></tr>';
+    });
+    h += '</table></div>';
+  });
+  return h + '<a class="btn" href="/export.xlsx">Ekspor ke Excel (.xlsx)</a>';
+}
+
+function dashHTML() {
+  var h = '<h2>Dashboard</h2><h3>Sisa stok global (sisa / batas)</h3>';
+  ['Essential', 'Non-Essential'].forEach(function (cat) {
+    h += '<div class="mut" style="margin:8px 0 4px">' + cat + '</div><div class="stock">';
+    S.codes.filter(function (c) { return c.cat === cat; }).forEach(function (c) {
+      var l = left(c.code);
+      h += '<div class="sc' + (l <= 0 ? ' zero' : '') + '">' + c.code + '<b>' + l + ' / ' + c.limit + '</b></div>';
+    });
+    h += '</div>';
+  });
+  var ben = {};
+  for (var k in S.rows) if (S.rows[k][2] >= 1) { var q = k.split('|'); (ben[q[0] + '|' + q[1]] = ben[q[0] + '|' + q[1]] || {})[q[2]] = 1; }
+  h += '<h3>Kode soal yang sudah Benar per tim</h3>';
+  S.pos.forEach(function (p) {
+    h += '<div class="mut" style="margin:10px 0 4px">Pos ' + p + '</div><table><tr><th style="width:64px">Tim</th><th>Kode Benar</th><th class="n" style="width:52px">Jml</th></tr>';
+    for (var i = 1; i <= S.tim; i++) {
+      var l = S.codes.filter(function (c) { return ben[p + '|' + i] && ben[p + '|' + i][c.code]; }).map(function (c) { return c.code; });
+      h += '<tr><td>' + p + '-' + i + '</td><td>' + (l.length ? l.join(', ') : '<span class="mut">\u2014</span>') + '</td><td class="n">' + l.length + '</td></tr>';
+    }
+    h += '</table>';
+  });
+  return h + '<a class="btn" href="/export.xlsx">Ekspor ke Excel (.xlsx)</a>';
+}
+
+function logHTML() {
+  var h = '<h2>Log</h2><div class="scroll"><table><tr><th>Waktu</th><th>Nama/ID</th><th>Pos-Tim</th><th>Soal</th><th>Aksi</th><th class="n">Neleci</th><th class="n">Saldo Tim</th><th>Catatan</th><th>Perangkat</th></tr>';
+  S.log.slice(0, 300).forEach(function (e) {
+    var a = e.type === 'undo' ? '\u21a9 batal ' + e.act : e.act;
+    var d = typeof e.d === 'number' ? '<span class="' + (e.d > 0 ? 'pos' : e.d < 0 ? 'neg' : '') + '">' + sign(e.d) + '</span>' : '-';
+    h += '<tr class="' + (e.undone ? 'struck' : '') + '"' + (e.warn ? ' style="background:#fff4f4"' : '') + '><td>' + new Date(e.t).toLocaleTimeString('id-ID') + '</td><td>' + esc(e.user || '-') + '</td><td>' + e.pos + '-' + e.tim + '</td><td>' + e.code + '</td><td>' + esc(a) + '</td><td class="n">' + d + '</td><td class="n">' + (typeof e.bal === 'number' ? e.bal : '-') + '</td><td class="neg">' + (e.warn ? '\u26a0 ' + esc(e.warn) : '') + '</td><td>' + esc(e.ip) + '</td></tr>';
+  });
+  if (!S.log.length) h += '<tr><td colspan="9" class="mut">Belum ada aksi.</td></tr>';
+  return h + '</table></div><a class="btn" href="/export.xlsx">Ekspor ke Excel (.xlsx)</a>';
+}
+
+function askName() {
+  var last = ''; try { last = localStorage.getItem('user') || ''; } catch (e) {}
+  $('#askin').value = user || last; $('#ask').hidden = false; setTimeout(function () { $('#askin').focus(); $('#askin').select(); }, 50);
+}
+$('#askf').addEventListener('submit', function (e) {
+  e.preventDefault(); var v = $('#askin').value.trim(); if (!v) return;
+  user = v; store('user', v); try { localStorage.setItem('user', v); } catch (x) {}
+  $('#ask').hidden = true; render();
+});
+user = sget('user'); pos = sget('pos');
+view = parseHash();
+if (!user) askName();
+connect(); loadState();
+</script>
+</body>
+</html>
