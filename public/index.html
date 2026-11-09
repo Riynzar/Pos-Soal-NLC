@@ -1,0 +1,755 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pos Soal</title>
+<style>
+@font-face{font-family:'Poppins';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/poppins-400.woff2) format('woff2')}
+@font-face{font-family:'Poppins';font-style:normal;font-weight:500;font-display:swap;src:url(/fonts/poppins-500.woff2) format('woff2')}
+@font-face{font-family:'Poppins';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/poppins-600.woff2) format('woff2')}
+@font-face{font-family:'Poppins';font-style:normal;font-weight:700;font-display:swap;src:url(/fonts/poppins-700.woff2) format('woff2')}
+@font-face{font-family:'Poppins';font-style:normal;font-weight:800;font-display:swap;src:url(/fonts/poppins-800.woff2) format('woff2')}
+:root{--bg:#fff;--fg:#1a1a1a;--mut:#6b6b6b;--line:#e2e2e2;--soft:#f5f5f5;
+--ok:#d6f0d6;--okfg:#17501c;--wait:#fff0b3;--waitfg:#6b4e00;--out:#f8d4d4;--outfg:#8a1c1c;--done:#666}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;font:14px/1.4 'Poppins',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--fg);background:var(--bg)}
+a{color:inherit}
+header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:8px;padding:8px 12px;flex-wrap:wrap}
+.brand{font-weight:600;margin-right:4px}
+.posb{font-weight:600;padding:5px 12px;background:var(--fg);color:#fff;border-radius:6px}
+.back{padding:6px 10px;border:1px solid var(--line);border-radius:6px;text-decoration:none}
+.sp{flex:1}
+.dot{width:9px;height:9px;border-radius:50%;background:#c33;display:inline-block}
+.dot.on{background:#2a9d3a}
+.who{font:inherit;font-size:13px;border:1px solid var(--line);border-radius:6px;background:#fff;padding:6px 10px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
+main{padding:12px;max-width:780px;margin:0 auto}
+
+/* ===== HOMEPAGE: Glow Card Spotlight Pos Buttons ===== */
+.posgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:20px;padding:8px 0}
+
+/* Wrapper: provides the glowing border via padding + background gradient */
+.glow-wrap{
+  position:relative;
+  border-radius:18px;
+  padding:2px; /* border thickness */
+  background:hsl(220 15% 82% / 0.7); /* fallback border */
+  box-shadow:0 4px 24px -6px rgba(0,0,0,0.12);
+  transition:box-shadow 0.25s ease, transform 0.2s ease;
+  cursor:pointer;
+}
+.glow-wrap:hover{
+  transform:translateY(-5px) scale(1.03);
+}
+.glow-wrap:active{transform:translateY(-1px) scale(0.99)}
+
+/* Inner card */
+[data-glow-card]{
+  position:relative;
+  cursor:pointer;
+  font:inherit;
+  width:100%;
+  aspect-ratio:1/1.15;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  border:none;
+  border-radius:16px; /* 18-2=16 so inner radius matches */
+  background:#f8f8fb;
+  overflow:hidden;
+  touch-action:none;
+  transition:background 0.2s ease;
+}
+
+.pos-letter{font-size:46px;font-weight:800;line-height:1;letter-spacing:-1px;color:var(--fg);position:relative;z-index:1}
+.pos-sub{font-size:12px;color:var(--mut);font-weight:500;position:relative;z-index:1}
+
+/* Homepage title */
+.home-title{font-size:22px;font-weight:700;margin:8px 0 16px;letter-spacing:-0.3px}
+.home-title span{color:var(--mut);font-size:13px;font-weight:400;margin-left:8px}
+
+/* ===== ACTION BUTTONS: Interactive Hover Animation ===== */
+.links{display:flex;gap:8px;flex-wrap:wrap}
+.tims{display:grid;grid-template-columns:repeat(15,1fr);gap:4px;margin-bottom:12px}
+.tim{display:block;text-align:center;padding:5px 0;min-width:0;border:1px solid var(--line);border-radius:6px;text-decoration:none;line-height:1.2}
+.tim b{display:block;font-size:14px;font-weight:600}
+.tim small{color:var(--mut);font-size:10px}
+.tim.on{background:var(--fg);color:#fff;border-color:var(--fg)}
+.tim.on small{color:#ccc}
+h2{font-size:17px;margin:4px 0 10px}
+h3{font-size:14px;margin:18px 0 8px;color:var(--mut);font-weight:600}
+.head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+.head h2{margin:0}
+.bal{font-size:15px}
+.bal b{font-size:20px}
+table{border-collapse:collapse;width:100%}
+th,td{border:1px solid var(--line);padding:5px 8px;text-align:left}
+th{background:var(--soft);font-weight:700;font-size:13px;text-align:center}
+td.n,th.n{text-align:right}
+.sum{width:100%;max-width:420px;margin-bottom:6px}
+.grp td{background:var(--soft);font-weight:700;font-size:13px;color:var(--fg);text-align:center;letter-spacing:.2px}
+.code{font-weight:600;white-space:nowrap}
+.code small{display:block;font-weight:400;font-size:11px;color:var(--mut)}
+.st{font-size:13px;font-weight:600;white-space:nowrap}
+.st small{display:block;font-weight:400;opacity:.8}
+.ok{background:#2f9e57;color:#fff}
+.wait{background:#f2a900;color:#2b1d00}
+.out{background:#d64545;color:#fff}
+.done{background:var(--done);color:#fff}
+td.act{padding:4px;text-align:center}
+button,input{font-family:inherit}
+button{font:inherit;cursor:pointer}
+
+.tbl{table-layout:fixed;width:100%}
+.tbl .c-k{width:12%}.tbl .c-s{width:20%}.tbl .c-a{width:20%}.tbl .c-u{width:8%}
+.tbl th,.tbl td{padding:4px 6px}
+.tbl th,.sum th{text-align:center;font-weight:700}
+/* warna per kode soal (palet dari gambar) */
+.tbl td.code{text-align:center}
+.g-H{background:#c9daf8}.g-N{background:#ffe599}.g-P{background:#b6d7a8}
+.g-L{background:#f4cccc}.g-T{background:#d9d2e9}.g-M{background:#f9cb9c}
+/* garis tebal pemisah antar-inisial */
+.tbl tr.gs td{border-top:3px solid var(--fg)}
+.tbl td.act{padding:3px 4px}
+.tbl .st{white-space:normal;line-height:1.25}
+.tbl .code{line-height:1.25}
+
+/* Tombol aksi bergambar (pixel-art) */
+.a{
+  position:relative;
+  display:block;
+  width:100%;max-width:112px;margin:0 auto;
+  padding:0;border:0;background:none;
+  line-height:0;
+  -webkit-tap-highlight-color:transparent;
+  transition:transform .12s ease, filter .12s ease;
+}
+.a img{
+  display:block;width:100%;height:auto;
+  image-rendering:pixelated;
+  pointer-events:none;user-select:none;-webkit-user-drag:none;
+}
+.a:not(:disabled):hover{transform:translateY(-2px);filter:brightness(1.08)}
+.a:not(:disabled):active{transform:translateY(1px) scale(.97);filter:brightness(.92)}
+.a:focus-visible{outline:2px solid var(--fg);outline-offset:2px;border-radius:6px}
+.a:disabled{cursor:not-allowed;filter:grayscale(1);opacity:.35}
+/* jumlah (n) di pojok kanan atas tombol */
+.a .a-count{
+  position:absolute;top:-6px;right:-4px;
+  min-width:18px;height:18px;padding:0 4px;
+  border-radius:9px;background:var(--fg);color:#fff;
+  font:600 11px/18px 'Poppins',sans-serif;text-align:center;
+  box-shadow:0 0 0 2px #fff;
+}
+.done .a .a-count{box-shadow:0 0 0 2px var(--done)}
+
+.btn{background:#fff;color:var(--fg)}
+.admform{display:flex;gap:8px;max-width:360px;margin:10px 0}
+.admform input{flex:1;min-width:0;padding:9px 10px;border:1px solid #bbb;border-radius:6px}
+.admform .btn{margin-top:0}
+.adm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:12px 0}
+.adm-card{border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.adm-card b{font-size:16px}
+.danger{padding:8px 10px;border:0;border-radius:6px;background:#d64545;color:#fff;font-weight:600}
+.danger:disabled{opacity:.35;cursor:not-allowed}
+
+/* undo button */
+.u{display:block;width:100%;max-width:36px;margin:0 auto;min-height:32px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--mut);transition:background 0.15s,color 0.15s}
+.u:not(:disabled):hover{background:var(--soft);color:var(--fg)}
+.u:disabled{opacity:.3;cursor:not-allowed}
+
+.stock{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:6px}
+.sc{border:1px solid var(--line);border-radius:6px;padding:6px 8px;text-align:center}
+.sc b{display:block}
+.sc.zero{background:var(--out);color:var(--outfg);border-color:transparent}
+.btn{display:inline-block;padding:9px 14px;border:1px solid var(--fg);border-radius:6px;text-decoration:none;margin-top:10px}
+.scroll{overflow-x:auto}
+.mut{color:var(--mut)}
+.struck{text-decoration:line-through;color:var(--mut)}
+.pos{color:#17701f}.neg{color:#a32020}
+#toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--fg);color:#fff;padding:9px 14px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .15s;z-index:30;max-width:90%}
+#toast.on{opacity:1}
+#ask{position:fixed;inset:0;background:rgba(255,255,255,.97);z-index:20;display:flex;align-items:center;justify-content:center;padding:16px}
+#ask[hidden]{display:none}
+#ask form{width:100%;max-width:320px}
+#ask input{width:100%;font:inherit;padding:10px;border:1px solid #bbb;border-radius:6px;margin:10px 0}
+#ask button{font:inherit;width:100%;padding:10px;border:0;border-radius:6px;background:var(--fg);color:#fff}
+
+/* Perputaran Neleci */
+.sync{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;padding:7px 10px;border-radius:8px;background:var(--soft);margin:0 0 10px}
+.sync.bad{background:#fdeaea;color:#8a1c1c}
+.sync .dot{flex:none}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:6px 0 10px}
+.card{border:1px solid var(--line);border-radius:10px;padding:9px 11px}
+.card small{display:block;color:var(--mut);font-size:11px}
+.card b{font-size:19px}
+.kubus{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px}
+.kubus a{padding:5px 12px;border:1px solid var(--line);border-radius:6px;text-decoration:none;font-weight:600}
+.kubus a.on{background:var(--fg);color:#fff;border-color:var(--fg)}
+.nt{font-size:12.5px;white-space:nowrap}
+.nt th,.nt td{padding:4px 6px}
+.nt td.n,.nt th.n{text-align:right}
+.nt td.it{text-align:center;min-width:26px}
+.nt th.it{text-align:center}
+.nt tr.tot td{font-weight:700;background:var(--soft)}
+.bd{font-size:12px;color:var(--mut);margin:-4px 0 10px}
+.items{display:flex;gap:4px;flex-wrap:wrap;margin:0 0 12px;font-size:12px}
+.items span{border-radius:5px;padding:2px 7px}
+.warnl{color:#a32020;font-size:12px;margin:4px 0}
+textarea.links{width:100%;min-height:70px;font:12px/1.4 monospace;padding:8px;border:1px solid #bbb;border-radius:6px}
+.admrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0}
+.admrow input{width:70px;padding:7px;border:1px solid #bbb;border-radius:6px}
+.admrow .btn{margin-top:0}
+@media(max-width:520px){
+  main{padding:8px}
+  th,td{padding:4px 3px}
+  .tbl .c-k{width:15%}.tbl .c-s{width:23%}.tbl .c-a{width:17%}.tbl .c-u{width:11%}
+  .tbl th,.tbl td{padding:3px 2px}
+  .tbl tr.gs td{border-top-width:2px}
+  .tbl td.code,.tbl td.st,.tbl th:nth-child(-n+2){padding-left:4px}
+  .tbl td.act{padding:2px 1px}
+  .tims{grid-template-columns:repeat(5,1fr)}
+  .tims .tim b{font-size:15px}
+  .a .a-count{top:-5px;right:-3px;min-width:16px;height:16px;font-size:10px;line-height:16px}
+  .u{min-width:0;padding:0;min-height:26px}
+  .st{font-size:11px}
+  .st small{font-size:10px}
+  .code{font-size:13px}
+  .code small{font-size:10px}
+  .head{flex-wrap:wrap}
+  .posgrid{grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:12px}
+  .pos-letter{font-size:36px}
+}
+
+/* ================= TEMA SPACE — Schematics NLC ================= */
+:root{--sp0:#06042e;--sp1:#251a5c;--sp2:#4e3472;--yel:#fcb200;--org:#f7902f;--lav:#e7b4f1;--ink:#1d1446}
+html{background:var(--sp0)}
+body{background:var(--sp0) url(/img/theme/bg-space.jpg) center/cover fixed;min-height:100vh;color:var(--fg)}
+.sky{position:fixed;inset:0;background:url(/img/theme/stars.webp) center/cover;pointer-events:none;z-index:0;animation:twinkle 4s ease-in-out infinite alternate}
+@keyframes twinkle{from{opacity:.55}to{opacity:1}}
+.band{position:fixed;left:0;right:0;bottom:0;height:0;pointer-events:none;z-index:0}
+.band img{position:absolute;height:auto;display:block;width:calc(var(--w) * 1vw);transform:rotate(var(--r)) scaleX(var(--f));animation:drift 10s ease-in-out infinite alternate}
+@keyframes drift{0%{transform:translate(0,0) rotate(var(--r)) scaleX(var(--f))}50%{transform:translate(6px,-9px) rotate(calc(var(--r) + 4deg)) scaleX(var(--f))}100%{transform:translate(-5px,-3px) rotate(calc(var(--r) - 3deg)) scaleX(var(--f))}}
+.meteor{position:fixed;pointer-events:none;z-index:0;opacity:0;width:220px}
+.meteor.m1{top:12%;right:-240px;animation:shoot 9s linear infinite 2s}
+.meteor.m2{top:45%;right:-240px;width:170px;animation:shoot 13s linear infinite 7s}
+@keyframes shoot{0%{transform:translate(0,0);opacity:0}3%{opacity:1}14%{transform:translate(-75vw,40vh);opacity:0}100%{opacity:0;transform:translate(-75vw,40vh)}}
+@media (prefers-reduced-motion:reduce){.meteor,.sky,.ufo,.band img{animation:none!important}.meteor{display:none}}
+header{background:rgba(9,6,42,.78);border-bottom:1px solid rgba(255,255,255,.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#fff}
+.brand{display:flex;align-items:center;gap:8px;color:#fff;font-weight:600}
+.brand img{height:26px;width:auto;display:block}
+.brand span{font-size:12px;color:var(--lav);font-weight:500;letter-spacing:.3px}
+.posb{background:var(--yel);color:var(--ink)}
+header .who,header .back{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);color:#fff}
+header .who:hover,header .back:hover{background:rgba(255,255,255,.2)}
+.dot{box-shadow:0 0 0 2px rgba(255,255,255,.25)}
+main{position:relative;z-index:1;margin:16px auto 40px;padding:16px;background:#fff;border-radius:18px;box-shadow:0 18px 50px -12px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.06)}
+main.home{background:none;box-shadow:none;padding:0 12px 6vh;margin:0 auto;min-height:calc(100vh - 51px);min-height:calc(100dvh - 51px);display:flex;flex-direction:column;justify-content:center}
+main.home .hero{padding-top:0}
+.pickpos [data-glow-card]{aspect-ratio:1/1}
+.pickpos .pos-letter{font-size:54px}
+.hero{position:relative;text-align:center;padding:40px 0 8px;color:#fff}
+.hero .logo{width:min(560px,86%);height:auto;display:block;margin:0 auto}
+.hero .tag{margin:8px 0 0;font-weight:600;color:var(--lav);letter-spacing:.4px}
+.ufo{position:fixed;right:0;top:52px;width:min(240px,19vw);z-index:0;pointer-events:none;animation:bob 3.2s ease-in-out infinite}
+.hero .m-hi{position:absolute;left:-10px;bottom:-34px;width:96px}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+.panel{position:relative;background:#fff;border-radius:18px;padding:16px;margin-top:22px;box-shadow:0 18px 50px -12px rgba(0,0,0,.55)}
+.panel .home-title{margin-top:0}
+.btn{border:2px solid var(--ink);color:var(--ink);font-weight:600;border-radius:999px;padding:8px 16px;transition:background .15s,transform .12s}
+.btn:hover{background:var(--yel)}
+.btn:active{transform:translateY(1px)}
+.empty{text-align:center;padding:14px 0;color:var(--mut)}
+.empty img{display:block;margin:0 auto 8px}
+.admhead{display:flex;align-items:center;gap:12px}
+.admhead img,.empty img{width:84px;height:84px;object-fit:contain;flex:none;padding:6px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4e3472,#160f47 72%);box-shadow:0 6px 16px -6px rgba(22,15,71,.6)}
+#toast{display:flex;align-items:center;gap:8px;background:var(--ink);border:1px solid rgba(255,255,255,.15);padding:6px 14px 6px 6px;border-radius:999px;bottom:22px}
+#toast img{width:34px;height:34px;object-fit:contain;flex:none}
+#ask{background:var(--sp0) url(/img/theme/bg-space.jpg) center/cover;color:#fff}
+#ask form{background:#fff;color:var(--fg);border-radius:18px;padding:18px;box-shadow:0 18px 50px -12px rgba(0,0,0,.6);text-align:center}
+#ask .logo{width:100%;margin:0 0 6px}
+#ask .m-wave{width:110px;display:block;margin:-70px auto 4px}
+#ask button{background:var(--ink);border-radius:999px;font-weight:600}
+#ask input{text-align:center}
+/* kartu Pilih Pos berdiri sendiri */
+.pickpos{position:relative;margin-top:30px}
+.pickpos .m-hi{position:absolute;right:4px;top:-74px;width:84px;pointer-events:none}
+.pickpos .posgrid{display:flex;flex-wrap:wrap;justify-content:center;gap:20px}
+.pickpos .glow-wrap{flex:0 0 calc((100% - 80px)/5);background:rgba(255,255,255,.35);box-shadow:0 10px 30px -8px rgba(0,0,0,.6)}
+.pickpos [data-glow-card]{background:var(--yel);box-shadow:inset 0 -6px 0 rgba(0,0,0,.12)}
+.pickpos .pos-letter{color:var(--ink)}
+.pickpos .pos-sub{color:var(--ink);opacity:.75;font-weight:600}
+/* sidebar */
+.menu{flex:none;width:38px;height:34px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;border:1px solid rgba(255,255,255,.25);border-radius:8px;background:rgba(255,255,255,.1);padding:0}
+.menu span{display:block;width:16px;height:2px;border-radius:2px;background:#fff}
+.menu:hover{background:rgba(255,255,255,.2)}
+#nav{position:fixed;top:0;left:0;bottom:0;width:270px;max-width:82vw;z-index:40;display:flex;flex-direction:column;background:linear-gradient(180deg,#0d0838,#2c1d5e);color:#fff;box-shadow:12px 0 40px rgba(0,0,0,.5);transform:translateX(-105%);transition:transform .22s ease;overflow:hidden}
+.navon #nav{transform:none}
+#navbg{position:fixed;inset:0;z-index:39;background:rgba(4,2,24,.55);opacity:0;pointer-events:none;transition:opacity .22s}
+.navon #navbg{opacity:1;pointer-events:auto}
+.navtop{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 14px 10px}
+.navtop img{height:24px;width:auto}
+.navx{width:32px;height:32px;border:0;border-radius:8px;background:rgba(255,255,255,.1);color:#fff;font-size:22px;line-height:1}
+#nav nav{display:flex;flex-direction:column;gap:4px;padding:8px 10px}
+#nav nav a{display:block;padding:11px 14px;border-radius:10px;text-decoration:none;font-weight:600;color:#fff}
+#nav nav a:hover{background:rgba(255,255,255,.1)}
+#nav nav a.on{background:var(--yel);color:var(--ink)}
+.navm{width:150px;margin:auto auto 14px;display:block;opacity:.95}
+#off{position:fixed;left:12px;bottom:12px;z-index:25;display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:4px 14px 4px 4px;font-size:13px;font-weight:600;color:#a32020;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+#off img{width:36px}
+#off[hidden]{display:none}
+@media(max-width:520px){
+  main{margin:10px 8px 30px;padding:10px;border-radius:14px}
+  main.home{padding:0}
+  .panel{padding:12px;border-radius:14px}
+  .hero{padding-top:18px}
+  .ufo{width:96px;top:46px}
+  .hero{padding-top:64px}
+  main.home .hero{padding-top:40px}
+  main.home{padding:0 16px 6vh!important;margin:0 auto!important}
+  .pickpos .pos-letter{font-size:44px}
+  .hero .m-hi{width:64px;left:0;bottom:-26px}
+  .brand span{display:none}
+  .inpos .brand{display:none}
+  .hero .tag{font-size:13px}
+  .pickpos .m-hi{width:60px;top:-54px}
+  .pickpos .posgrid{gap:12px}
+  .band img{width:calc(var(--w) * 2.3vw)}
+  .pickpos .glow-wrap{flex-basis:calc((100% - 24px)/3)}
+  .hero{padding-bottom:22px}
+  .panel>.m-hi{width:58px!important;top:-46px!important;right:6px!important}
+  .brand img{height:20px}
+  .meteor{width:140px}
+}
+</style>
+</head>
+<body>
+<div class="sky" aria-hidden="true"></div>
+<img class="meteor m1" src="/img/theme/meteor-1.webp" alt="" aria-hidden="true">
+<img class="meteor m2" src="/img/theme/meteor-2.webp" alt="" aria-hidden="true">
+<div class="band" aria-hidden="true">
+  <img src="/img/theme/p-asteroid.webp" alt="" style="left:-1.5%;bottom:3.0vh;--w:13.5;--r:-8deg;--f:1;opacity:1.00;filter:blur(0.0px);animation-duration:9s;animation-delay:0s">
+  <img src="/img/theme/a-dark-1.webp" alt="" style="left:1.5%;bottom:24.0vh;--w:5.0;--r:14deg;--f:1;opacity:0.82;filter:blur(0.6px);animation-duration:11s;animation-delay:-3s">
+  <img src="/img/theme/a-dark-2.webp" alt="" style="left:13.5%;bottom:12.5vh;--w:3.4;--r:-20deg;--f:-1;opacity:0.78;filter:blur(0.8px);animation-duration:8s;animation-delay:-5s">
+  <img src="/img/theme/a-dark-1.webp" alt="" style="left:22.0%;bottom:1.0vh;--w:6.2;--r:32deg;--f:-1;opacity:0.91;filter:blur(0.3px);animation-duration:12s;animation-delay:-2s">
+  <img src="/img/theme/a-dark-2.webp" alt="" style="left:33.0%;bottom:17.0vh;--w:2.6;--r:8deg;--f:1;opacity:0.73;filter:blur(1.0px);animation-duration:10s;animation-delay:-7s">
+  <img src="/img/theme/p-asteroid.webp" alt="" style="left:42.0%;bottom:-2.0vh;--w:15.5;--r:10deg;--f:-1;opacity:1.00;filter:blur(0.0px);animation-duration:13s;animation-delay:-4s">
+  <img src="/img/theme/a-dark-2.webp" alt="" style="left:56.5%;bottom:21.0vh;--w:3.0;--r:-34deg;--f:1;opacity:0.75;filter:blur(0.9px);animation-duration:9s;animation-delay:-1s">
+  <img src="/img/theme/a-dark-1.webp" alt="" style="left:63.0%;bottom:6.5vh;--w:6.8;--r:-12deg;--f:1;opacity:0.93;filter:blur(0.2px);animation-duration:10s;animation-delay:-6s">
+  <img src="/img/theme/a-dark-2.webp" alt="" style="left:75.5%;bottom:0.5vh;--w:4.8;--r:22deg;--f:-1;opacity:0.86;filter:blur(0.5px);animation-duration:8s;animation-delay:-3s">
+  <img src="/img/theme/a-dark-1.webp" alt="" style="left:81.0%;bottom:27.0vh;--w:3.6;--r:40deg;--f:-1;opacity:0.75;filter:blur(0.9px);animation-duration:12s;animation-delay:-8s">
+  <img src="/img/theme/p-asteroid.webp" alt="" style="left:87.0%;bottom:8.0vh;--w:14.0;--r:-14deg;--f:1;opacity:1.00;filter:blur(0.0px);animation-duration:11s;animation-delay:-2s">
+</div>
+<div id="navbg"></div>
+<aside id="nav" aria-label="Menu">
+  <div class="navtop"><img src="/img/theme/logo.webp" alt="Schematics NLC"><button class="navx" id="navx" aria-label="Tutup menu">&times;</button></div>
+  <nav>
+    <a data-nav href="#home">Beranda</a>
+    <a data-nav href="#hasil">Hasil Akhir</a>
+    <a data-nav href="#neleci">Perputaran Neleci</a>
+    <a data-nav href="#dash">Dashboard</a>
+    <a data-nav href="#log">Log</a>
+    <a data-nav href="#admin">Admin</a>
+  </nav>
+  <img class="navm" src="/img/theme/m-astro.webp" alt="">
+</aside>
+<header><div class="bar" id="head"></div></header>
+<main id="main"><p class="mut">Memuat…</p></main>
+<div id="toast"><img id="toasti" src="/img/theme/m-happy.webp" alt=""><span id="toastm"></span></div>
+<div id="off" hidden><img src="/img/theme/m-worried.webp" alt="">Terputus dari server &mdash; menyambung ulang&hellip;</div>
+<div id="ask" hidden><form id="askf"><img class="m-wave" src="/img/theme/m-wave.webp" alt=""><img class="logo" src="/img/theme/logo.webp" alt="Schematics NLC"><b>Nama / ID</b><input id="askin" maxlength="30" autocomplete="off" required><button>Mulai</button></form></div>
+<script>
+'use strict';
+var adminPw = '', user = '', pos = '', S = null, conn = false, view = { v: 'home' }, busy = {};
+var $ = function (s) { return document.querySelector(s); };
+var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); };
+function store(k, v) { try { if (v === null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, v); } catch (e) {} }
+function sget(k) { try { return sessionStorage.getItem(k) || ''; } catch (e) { return ''; } }
+function sign(n) { return n > 0 ? '+' + n : n < 0 ? '−' + (-n) : '0'; }
+
+/* ---------- Glow card: drive border gradient on each wrapper ---------- */
+document.addEventListener('pointermove', function (e) {
+  var wraps = document.querySelectorAll('.glow-wrap');
+  var mx = e.clientX, my = e.clientY;
+  /* hue shifts 0-360 based on horizontal position */
+  var hue = Math.round(200 + (mx / window.innerWidth) * 160);
+  for (var i = 0; i < wraps.length; i++) {
+    var rect = wraps[i].getBoundingClientRect();
+    /* position of cursor relative to this wrapper */
+    var lx = mx - rect.left;
+    var ly = my - rect.top;
+    /* size of the glow spot: ~1.5× the card diagonal */
+    var spot = Math.round(Math.sqrt(rect.width * rect.width + rect.height * rect.height) * 1.5);
+    wraps[i].style.backgroundImage =
+      'radial-gradient(' + spot + 'px ' + spot + 'px at ' + lx + 'px ' + ly + 'px, ' +
+      'hsl(' + hue + ' 100% 65% / 0.95), transparent 70%)';
+    wraps[i].style.boxShadow =
+      '0 0 0 0.5px hsl(' + hue + ' 60% 70% / 0.4), ' +
+      '0 6px 28px -6px rgba(0,0,0,0.15), ' +
+      '0 0 20px -4px hsl(' + hue + ' 100% 70% / 0.25)';
+  }
+});
+
+/* ---------- routing ---------- */
+function parseHash() {
+  var h = location.hash.slice(1);
+  if (pos) {
+    var m = /^([A-E])\/(\d+)$/.exec(h), t = 1;
+    if (m && m[1] === pos && +m[2] >= 1 && +m[2] <= 15) t = +m[2];
+    else t = +sget('tim' + pos) || 1;
+    return { v: 'team', t: t };
+  }
+  if (h === 'dash' || h === 'log' || h === 'hasil' || h === 'admin') return { v: h };
+  var nm = /^neleci(?:\/([A-E]))?$/.exec(h); if (nm) return { v: 'neleci', k: nm[1] || '' };
+  return { v: 'home' };
+}
+function route() { view = parseHash(); if (view.v === 'team') store('tim' + pos, view.t); render(); window.scrollTo(0, 0); }
+function go(h) { if (location.hash === '#' + h) route(); else location.hash = h; }
+window.addEventListener('hashchange', route);
+function enterPos(p) { pos = p; store('pos', p); go(p + '/' + (+sget('tim' + p) || 1)); }
+function exitPos() { pos = ''; store('pos', null); go('home'); }
+
+/* ---------- data ---------- */
+function row(p, t, c) { return S.rows[p + '|' + t + '|' + c] || [0, 0, 0]; }
+function left(code) { return S.cmap[code].limit - (S.used[code] || 0); }
+function bal(p, t) { return S.saldo[p + '|' + t]; }
+var ZERO = { S: 0, N: 0, H: 0, P: 0, T: 0, L: 0, M: 0 };
+function itemInfo(p, t) { // sama dengan server: S selalu dibayar; L/T/M dibayar = Denah − soal Benar jenis itu
+  var cnt = (S.denah && S.denah.items[p + '|' + t]) || ZERO, ben = { H: 0, N: 0, P: 0, L: 0, T: 0, M: 0 };
+  S.codes.forEach(function (c) { if (row(p, t, c.code)[2] >= 1) ben[c.grp]++; });
+  var bayar = { S: cnt.S }, warn = [], spend = 0;
+  ['L', 'T', 'M'].forEach(function (L) { bayar[L] = Math.max(0, cnt[L] - ben[L]); });
+  ['H', 'N', 'P'].forEach(function (L) { if (cnt[L] > ben[L]) warn.push(L + ' di Denah ' + cnt[L] + ', soal ' + L + ' Benar ' + ben[L]); });
+  if (S.denah && S.denah.place && S.denah.place[p + '|' + t]) warn = warn.concat(S.denah.place[p + '|' + t]);
+  for (var L in S.itemPrice) spend += bayar[L] * S.itemPrice[L];
+  return { cnt: cnt, ben: ben, bayar: bayar, spend: spend, warn: warn };
+}
+function eff(p, t) { return bal(p, t) - itemInfo(p, t).spend; }
+function flow(p, t) { // arus Neleci satu tim
+  var x = { modal: S.start, soal: 0, item: itemInfo(p, t), masuk: 0 };
+  S.codes.forEach(function (c) { var r = row(p, t, c.code); x.soal += r[0] * c.price; x.masuk += r[2] * c.reward; });
+  x.saldo = x.modal - x.soal - x.item.spend + x.masuk;
+  return x;
+}
+function ago(ms) { var s = Math.round((Date.now() - ms) / 1000); return s < 60 ? s + ' dtk lalu' : s < 3600 ? Math.round(s / 60) + ' mnt lalu' : new Date(ms).toLocaleTimeString('id-ID'); }
+function syncBar() {
+  var d = S.denah || {}, bad = !!d.err || !d.at;
+  var t = d.at ? 'Data Denah: sinkron terakhir ' + ago(d.at) : 'Data Denah belum pernah tersinkron';
+  if (d.err) t += ' \u2014 \u26a0 ' + esc(d.err) + (d.at ? ' (memakai data terakhir)' : '');
+  return '<div class="sync' + (bad ? ' bad' : '') + '"><span class="dot' + (bad ? '' : ' on') + '"></span><span>' + t + '</span></div>';
+}
+function stat(p, t, c) {
+  var r = row(p, t, c.code);
+  if (r[2] >= 1) return { cls: 'done', txt: 'Selesai (Benar)' };
+  if (r[0] > r[1]) return { cls: 'wait', txt: 'Menunggu Jawaban' };
+  if (left(c.code) <= 0) return { cls: 'out', txt: 'HABIS' };
+  return { cls: 'ok', txt: 'Tersedia' };
+}
+function loadState() {
+  return fetch('/api/state', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
+    d.cmap = {}; d.codes.forEach(function (c) { d.cmap[c.code] = c; });
+    S = d; render();
+  }).catch(function () {});
+}
+function applyEvent(ev) {
+  if (!S) return;
+  if (ev.denah) { S.denah = ev.denah; if (view.v !== 'admin' || !$('textarea.links') || document.activeElement !== $('textarea.links')) render(); return; }
+  if (ev.n <= S.seq) return;
+  if (ev.reset) { loadState(); return; }
+  if (ev.n !== S.seq + 1) { loadState(); return; }
+  S.rows[ev.row[0] + '|' + ev.row[1] + '|' + ev.row[2]] = [ev.row[3], ev.row[4], ev.row[5]];
+  S.used[ev.used[0]] = ev.used[1];
+  S.saldo[ev.bal[0] + '|' + ev.bal[1]] = ev.bal[2];
+  if (ev.undid) S.log.forEach(function (l) { if (l.n === ev.undid) l.undone = true; });
+  S.log.unshift(ev.log); if (S.log.length > 500) S.log.pop();
+  S.seq = ev.n; render();
+}
+function connect() {
+  var es = new EventSource('/api/stream');
+  es.onopen = function () { conn = true; dot(); loadState(); };
+  es.onmessage = function (e) { applyEvent(JSON.parse(e.data)); };
+  es.onerror = function () { conn = false; dot(); };
+}
+function dot() { var o = $('#off'); if (o) o.hidden = conn || !S; var d = $('#dot'); if (d) { d.className = 'dot' + (conn ? ' on' : ''); d.title = conn ? 'Terhubung' : 'Terputus'; } }
+
+/* ---------- aksi ---------- */
+function toast(m, ok) {
+  var t = $('#toast'); $('#toastm').textContent = m;
+  $('#toasti').src = '/img/theme/' + (ok ? 'm-happy' : /^\u26a0/.test(m) ? 'm-sweat' : 'm-worried') + '.webp';
+  t.className = 'on'; clearTimeout(toast.h); toast.h = setTimeout(function () { t.className = ''; }, 2600); }
+function rid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 10); }
+function send(path, a, code) {
+  var key = pos + view.t + code; if (busy[key]) return; busy[key] = 1;
+  fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id: rid(), user: user, pos: pos, tim: view.t, code: code, act: a }) })
+    .then(function (r) { return r.json(); })
+    .then(function (d) { if (d.ok) { applyEvent(d.ev); if (d.ev.log.warn) toast('\u26a0 ' + d.ev.log.warn); } else toast(d.err); })
+    .catch(function () { toast('Gagal terkirim \u2014 cek koneksi WiFi'); })
+    .then(function () { delete busy[key]; });
+}
+function navOpen(v) { document.body.classList.toggle('navon', v); }
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') navOpen(false); });
+document.addEventListener('click', function (e) {
+  var t = e.target;
+  if (t.closest('#menu')) { navOpen(!document.body.classList.contains('navon')); return; }
+  if (t.id === 'navbg' || t.id === 'navx') { navOpen(false); return; }
+  var na = t.closest('a[data-nav]');
+  if (na) { e.preventDefault(); navOpen(false); if (pos) { pos = ''; store('pos', null); } go(na.getAttribute('href').slice(1)); return; }
+  var p = t.closest('button[data-pos]'); if (p) { enterPos(p.dataset.pos); return; }
+  if (t.id === 'exit') { exitPos(); return; }
+  if (t.id === 'who') { askName(); return; }
+  if (t.id === 'admout') { adminPw = ''; render(); return; }
+  if (t.id === 'dsync') { denahSync(); return; }
+  var gt = t.closest('a[data-goto]'); if (gt) { e.preventDefault(); pos = gt.dataset.goto; store('pos', pos); go(gt.getAttribute('href').slice(1)); return; }
+  var rs = t.closest('button[data-reset]'); if (rs && !rs.disabled) { doReset(rs.dataset.reset); return; }
+  var b = t.closest('button[data-c]'); if (!b || b.disabled || !pos) return;
+  if (b.dataset.a === 'undo') send('/api/undo', 'undo', b.dataset.c); else send('/api/act', b.dataset.a, b.dataset.c);
+});
+
+/* ---------- tampilan ---------- */
+function render() {
+  if (!S || !user) return;
+  var h = '<button class="menu" id="menu" aria-label="Buka menu" aria-controls="nav"><span></span><span></span><span></span></button><span class="brand"><img src="/img/theme/logo.webp" alt="Schematics NLC"><span>POS SOAL</span></span>';
+  if (pos) h += '<span class="posb">Pos ' + pos + '</span><span class="sp"></span><button class="who" id="exit">\u2190 Keluar Pos</button>';
+  else h += '<span class="sp"></span>';
+  h += '<button class="who" id="who" title="Ganti nama/ID">' + esc(user) + '</button><span id="dot" class="dot"></span>';
+  $('#head').innerHTML = h;
+  var cur = pos ? '' : view.v === 'team' ? '' : view.v;
+  [].forEach.call(document.querySelectorAll('#nav a[data-nav]'), function (a) { a.classList.toggle('on', a.getAttribute('href').slice(1) === cur || (cur === 'neleci' && a.getAttribute('href') === '#neleci')); }); $('#head').className = 'bar' + (pos ? ' inpos' : ''); dot();
+  if (view.v === 'admin' && !adminPw && $('#admpw')) return;
+  var ta = $('textarea.links'), draft = ta && view.v === 'admin' ? ta.value : null;
+  $('#main').className = view.v === 'home' ? 'home' : '';
+  $('#main').innerHTML = view.v === 'admin' ? adminHTML() : view.v === 'team' ? teamHTML(pos, view.t) : view.v === 'dash' ? dashHTML() : view.v === 'log' ? logHTML() : view.v === 'hasil' ? hasilHTML() : view.v === 'neleci' ? neleciHTML(view.k) : homeHTML();
+  var ap = $('#admpw'); if (ap && !ap.value) ap.focus();
+  if (draft !== null && $('textarea.links')) $('textarea.links').value = draft;
+}
+
+function homeHTML() {
+  var h = '<img class="ufo" src="/img/theme/ufo.webp" alt="" aria-hidden="true"><div class="hero"><img class="logo" src="/img/theme/logo.webp" alt="Schematics NLC"><p class="tag">Pos Soal</p></div>'
+    + '<div class="pickpos"><img class="m-hi" src="/img/theme/m-hi.webp" alt=""><div class="posgrid">';
+  S.pos.forEach(function (p) {
+    h += '<div class="glow-wrap">'
+      + '<button data-glow-card data-pos="' + p + '" aria-label="Masuk Pos ' + p + '">'
+      + '<span class="pos-letter">' + p + '</span>'
+      + '</button>'
+      + '</div>';
+  });
+  h += '</div></div>';
+  return h;
+}
+
+function teamHTML(p, t) {
+  var h = '<div class="tims">';
+  for (var i = 1; i <= S.tim; i++) { var e_ = eff(p, i); h += '<a class="tim' + (i === t ? ' on' : '') + '" href="#' + p + '/' + i + '"><b>' + i + '</b><small' + (e_ < 0 ? ' style="color:#d33"' : '') + '>' + e_ + '</small></a>'; }
+  var it = itemInfo(p, t), ef = bal(p, t) - it.spend;
+  h += '</div><div class="head"><h2>' + p + '-' + t + '</h2><div class="bal">Saldo ' + p + '-' + t + ': <b class="' + (ef < 0 ? 'neg' : '') + '">' + ef + '</b> Neleci</div></div>';
+  h += '<div class="bd">Pos Soal ' + bal(p, t) + ' \u2212 belanja item Denah ' + it.spend
+    + (S.denah && S.denah.at ? ' \u00b7 Denah sinkron ' + ago(S.denah.at) : ' \u00b7 Denah belum tersinkron') + '</div>';
+  h += '<div class="items">' + ['S', 'H', 'N', 'P', 'L', 'T', 'M'].map(function (L) {
+    return '<span class="g-' + L + '"' + (L === 'S' ? ' style="background:#eee"' : '') + '>' + L + ' ' + it.cnt[L] + (it.bayar[L] != null ? ' (bayar ' + it.bayar[L] + ')' : '') + '</span>';
+  }).join('') + '</div>' + it.warn.map(function (w) { return '<div class="warnl">\u26a0 ' + esc(w) + '</div>'; }).join('');
+  h += '<div class="scroll"><table class="tbl"><colgroup><col class="c-k"><col class="c-s"><col class="c-a"><col class="c-a"><col class="c-a"><col class="c-u"></colgroup><tr><th>Kode</th><th>Status</th><th>Beli</th><th>Salah</th><th>Benar</th><th></th></tr>';
+  var cur = '';
+  S.codes.forEach(function (c) {
+    if (c.cat !== cur) { cur = c.cat; h += '<tr class="grp"><td colspan="6">' + cur + '</td></tr>'; }
+    var r = row(p, t, c.code), s = stat(p, t, c), fz = r[2] >= 1, lf = left(c.code), any = r[0] + r[1] + r[2] > 0;
+    var cn = fz ? ' done' : '';
+    var okSB = !fz && (r[1] + r[2] + 1 <= r[0]);
+    h += '<tr' + (/-1$/.test(c.code) ? ' class="gs"' : '') + '>'
+      + '<td class="code g-' + c.grp + '">' + c.code + '<small>' + sign(-c.price) + ' / ' + sign(c.reward) + '</small></td>'
+      + '<td class="st ' + s.cls + '">' + s.txt + '<small>Stok ' + lf + '/' + c.limit + '</small></td>'
+      + '<td class="act' + cn + '">' + btn('beli',  c.code, 'Beli',  r[0], fz || lf <= 0 || r[0] > r[1]) + '</td>'
+      + '<td class="act' + cn + '">' + btn('salah', c.code, 'Salah', r[1], !okSB) + '</td>'
+      + '<td class="act' + cn + '">' + btn('benar', c.code, 'Benar', r[2], !okSB) + '</td>'
+      + '<td class="act"><button class="u" data-a="undo" data-c="' + c.code + '" title="Batalkan aksi terakhir"' + (any ? '' : ' disabled') + '>\u21a9</button></td>'
+      + '</tr>';
+  });
+  h += '</table></div><h3>Rekap</h3><table class="sum"><tr><th>Kategori</th><th>Kode</th><th class="n">Jumlah Benar</th></tr>';
+  var all = 0;
+  [['Essential','H'],['Essential','N'],['Essential','P'],['Non-Essential','L'],['Non-Essential','T'],['Non-Essential','M']].forEach(function (g) {
+    var n = S.codes.filter(function (c) { return c.grp === g[1] && row(p, t, c.code)[2] >= 1; }).length; all += n;
+    h += '<tr><td>' + g[0] + '</td><td>' + g[1] + '</td><td class="n">' + n + '</td></tr>';
+  });
+  return h + '<tr><th colspan="2">Total</th><th class="n">' + all + '</th></tr></table>';
+}
+
+function btn(a, code, label, n, dis) {
+  var count = n ? '<span class="a-count">' + n + '</span>' : '';
+  return '<button class="a a-' + a + '" data-a="' + a + '" data-c="' + code + '"' + (dis ? ' disabled' : '') + ' aria-label="' + label + '" title="' + label + '">'
+    + '<img src="/img/' + a + '.png" alt="' + label + '" draggable="false">'
+    + count
+    + '</button>';
+}
+
+function hasilHTML() {
+  var T = {};
+  S.pos.forEach(function (p) { for (var i = 1; i <= S.tim; i++) T[p + '|' + i] = { pos: p, tim: i, saldo: eff(p, i), item: itemInfo(p, i).spend, beli: 0, salah: 0, benar: 0, keluar: 0, masuk: 0 }; });
+  for (var k in S.rows) {
+    var q = k.split('|'), r = S.rows[k], c = S.cmap[q[2]], x = T[q[0] + '|' + q[1]];
+    x.beli += r[0]; x.salah += r[1]; x.benar += r[2]; x.keluar += r[0] * c.price; x.masuk += r[2] * c.reward;
+  }
+  var h = '<h2>Hasil Akhir</h2>' + syncBar();
+  S.pos.forEach(function (p) {
+    var L = []; for (var i = 1; i <= S.tim; i++) L.push(T[p + '|' + i]);
+    L.sort(function (a, b) { return b.saldo - a.saldo || a.tim - b.tim; });
+    h += '<h3>Pos ' + p + '</h3><div class="scroll"><table><tr><th class="n">#</th><th>Tim</th><th class="n">Saldo</th><th class="n">Beli</th><th class="n">Salah</th><th class="n">Benar</th><th class="n">Keluar Soal</th><th class="n">Keluar Item</th><th class="n">Masuk</th></tr>';
+    var rank = 0, prev = null;
+    L.forEach(function (x, idx) {
+      if (x.saldo !== prev) rank = idx + 1; prev = x.saldo;
+      h += '<tr><td class="n">' + rank + '</td><td>' + p + '-' + x.tim + '</td><td class="n ' + (x.saldo < 0 ? 'neg' : '') + '"><b>' + x.saldo + '</b></td><td class="n">' + x.beli + '</td><td class="n">' + x.salah + '</td><td class="n">' + x.benar + '</td><td class="n">' + x.keluar + '</td><td class="n">' + x.item + '</td><td class="n">' + x.masuk + '</td></tr>';
+    });
+    h += '</table></div>';
+  });
+  return h + '<a class="btn" href="/export.xlsx">Ekspor ke Excel (.xlsx)</a>';
+}
+
+function neleciHTML(k) {
+  var h = '<h2>Perputaran Neleci</h2>' + syncBar(), G = { modal: 0, soal: 0, item: 0, masuk: 0, saldo: 0 }, K = {};
+  S.pos.forEach(function (p) {
+    var x = K[p] = { modal: 0, soal: 0, item: 0, masuk: 0, saldo: 0, teams: [] };
+    for (var i = 1; i <= S.tim; i++) { var f = flow(p, i); f.tim = i; x.teams.push(f); x.modal += f.modal; x.soal += f.soal; x.item += f.item.spend; x.masuk += f.masuk; x.saldo += f.saldo; }
+    for (var q in G) G[q] += x[q];
+  });
+  function cards(x) {
+    return '<div class="cards"><div class="card"><small>Modal awal</small><b>' + x.modal + '</b></div>'
+      + '<div class="card"><small>Keluar \u00b7 beli soal</small><b class="neg">' + sign(-x.soal) + '</b></div>'
+      + '<div class="card"><small>Keluar \u00b7 beli item</small><b class="neg">' + sign(-x.item) + '</b></div>'
+      + '<div class="card"><small>Masuk \u00b7 reward</small><b class="pos">' + sign(x.masuk) + '</b></div>'
+      + '<div class="card"><small>Saldo beredar</small><b>' + x.saldo + '</b></div></div>';
+  }
+  h += '<div class="kubus"><a href="#neleci"' + (k ? '' : ' class="on"') + '>Semua</a>' + S.pos.map(function (p) { return '<a href="#neleci/' + p + '"' + (k === p ? ' class="on"' : '') + '>Kubu ' + p + '</a>'; }).join('') + '</div>';
+  if (!k) {
+    h += cards(G) + '<h3>Per kubu</h3><div class="scroll"><table class="nt"><tr><th>Kubu</th><th class="n">Modal</th><th class="n">Beli Soal</th><th class="n">Beli Item</th><th class="n">Reward</th><th class="n">Saldo</th></tr>';
+    S.pos.forEach(function (p) { var x = K[p]; h += '<tr><td><a href="#neleci/' + p + '">Kubu ' + p + '</a></td><td class="n">' + x.modal + '</td><td class="n">' + sign(-x.soal) + '</td><td class="n">' + sign(-x.item) + '</td><td class="n">' + sign(x.masuk) + '</td><td class="n"><b>' + x.saldo + '</b></td></tr>'; });
+    h += '<tr class="tot"><td>Total</td><td class="n">' + G.modal + '</td><td class="n">' + sign(-G.soal) + '</td><td class="n">' + sign(-G.item) + '</td><td class="n">' + sign(G.masuk) + '</td><td class="n">' + G.saldo + '</td></tr></table></div>';
+    var W = []; S.pos.forEach(function (p) { K[p].teams.forEach(function (f) { f.item.warn.forEach(function (w) { W.push(p + '-' + f.tim + ': ' + w); }); }); });
+    if (W.length) h += '<h3>Perlu dicek</h3>' + W.map(function (w) { return '<div class="warnl">\u26a0 ' + esc(w) + '</div>'; }).join('');
+    if (S.denah && S.denah.warns && S.denah.warns.length) h += S.denah.warns.map(function (w) { return '<div class="warnl">\u26a0 ' + esc(w) + '</div>'; }).join('');
+  } else {
+    var x = K[k];
+    h += cards(x) + '<div class="scroll"><table class="nt"><tr><th>Tim</th><th class="n">Beli Soal</th><th class="n">Beli Item</th><th class="n">Reward</th><th class="n">Saldo</th>'
+      + ['S', 'H', 'N', 'P', 'L', 'T', 'M'].map(function (L) { return '<th class="it g-' + L + '"' + (L === 'S' ? ' style="background:#eee"' : '') + '>' + L + '</th>'; }).join('') + '</tr>';
+    x.teams.forEach(function (f) {
+      var it = f.item;
+      h += '<tr><td><a href="#' + k + '/' + f.tim + '" data-goto="' + k + '">' + k + '-' + f.tim + '</a>' + (it.warn.length ? ' <span class="neg" title="' + esc(it.warn.join('\n')) + '">\u26a0</span>' : '') + '</td><td class="n">' + f.soal + '</td><td class="n">' + it.spend + '</td><td class="n">' + f.masuk + '</td><td class="n ' + (f.saldo < 0 ? 'neg' : '') + '"><b>' + f.saldo + '</b></td>'
+        + ['S', 'H', 'N', 'P', 'L', 'T', 'M'].map(function (L) {
+          var bad = (L === 'H' || L === 'N' || L === 'P') && it.cnt[L] > it.ben[L];
+          var sub = (L === 'L' || L === 'T' || L === 'M') && it.cnt[L] ? '<small class="mut" title="dibayar">/' + it.bayar[L] + '</small>' : '';
+          return '<td class="it"' + (bad ? ' style="background:#fdeaea;color:#a32020;font-weight:700" title="' + esc(it.warn.join('; ')) + '"' : '') + '>' + (it.cnt[L] || '<span class="mut">0</span>') + sub + '</td>';
+        }).join('') + '</tr>';
+    });
+    var KW = []; x.teams.forEach(function (f) { f.item.warn.forEach(function (w) { KW.push(k + '-' + f.tim + ': ' + w); }); });
+    h += '<tr class="tot"><td>Total</td><td class="n">' + x.soal + '</td><td class="n">' + x.item + '</td><td class="n">' + x.masuk + '</td><td class="n">' + x.saldo + '</td><td colspan="7"></td></tr></table></div>'
+      + (KW.length ? '<h3>Perlu dicek</h3>' + KW.map(function (w) { return '<div class="warnl">\u26a0 ' + esc(w) + '</div>'; }).join('') : '');
+  }
+  return h + '<a class="btn" href="/export.xlsx">Ekspor ke Excel (.xlsx)</a>';
+}
+
+function dashHTML() {
+  var h = '<h2>Dashboard</h2><h3>Sisa stok global (sisa / batas)</h3>';
+  ['Essential', 'Non-Essential'].forEach(function (cat) {
+    h += '<div class="mut" style="margin:8px 0 4px">' + cat + '</div><div class="stock">';
+    S.codes.filter(function (c) { return c.cat === cat; }).forEach(function (c) {
+      var l = left(c.code);
+      h += '<div class="sc' + (l <= 0 ? ' zero' : '') + '">' + c.code + '<b>' + l + ' / ' + c.limit + '</b></div>';
+    });
+    h += '</div>';
+  });
+  var ben = {};
+  for (var k in S.rows) if (S.rows[k][2] >= 1) { var q = k.split('|'); (ben[q[0] + '|' + q[1]] = ben[q[0] + '|' + q[1]] || {})[q[2]] = 1; }
+  h += '<h3>Kode soal yang sudah Benar per tim</h3>';
+  S.pos.forEach(function (p) {
+    h += '<div class="mut" style="margin:10px 0 4px">Pos ' + p + '</div><table><tr><th style="width:64px">Tim</th><th>Kode Benar</th><th class="n" style="width:52px">Jml</th></tr>';
+    for (var i = 1; i <= S.tim; i++) {
+      var l = S.codes.filter(function (c) { return ben[p + '|' + i] && ben[p + '|' + i][c.code]; }).map(function (c) { return c.code; });
+      h += '<tr><td>' + p + '-' + i + '</td><td>' + (l.length ? l.join(', ') : '<span class="mut">\u2014</span>') + '</td><td class="n">' + l.length + '</td></tr>';
+    }
+    h += '</table>';
+  });
+  return h + '<a class="btn" href="/export.xlsx">Ekspor ke Excel (.xlsx)</a>';
+}
+
+function logHTML() {
+  var h = '<h2>Log</h2><div class="scroll"><table><tr><th>Waktu</th><th>Nama/ID</th><th>Pos-Tim</th><th>Soal</th><th>Aksi</th><th class="n">Neleci</th><th class="n">Saldo Soal</th><th>Catatan</th><th>Perangkat</th></tr>';
+  S.log.slice(0, 300).forEach(function (e) {
+    var a = e.type === 'undo' ? '\u21a9 batal ' + e.act : e.type === 'reset' ? 'RESET POS' : e.act;
+    var lbl = e.type === 'reset' ? 'Pos ' + e.pos + ' (semua tim)' : e.pos + '-' + e.tim;
+    var d = typeof e.d === 'number' ? '<span class="' + (e.d > 0 ? 'pos' : e.d < 0 ? 'neg' : '') + '">' + sign(e.d) + '</span>' : '-';
+    h += '<tr class="' + (e.undone ? 'struck' : '') + '"' + (e.warn ? ' style="background:#fff4f4"' : '') + '><td>' + new Date(e.t).toLocaleTimeString('id-ID') + '</td><td>' + esc(e.user || '-') + '</td><td>' + lbl + '</td><td>' + e.code + '</td><td>' + esc(a) + '</td><td class="n">' + d + '</td><td class="n">' + (typeof e.bal === 'number' ? e.bal : '-') + '</td><td class="neg">' + (e.warn ? '\u26a0 ' + esc(e.warn) : '') + '</td><td>' + esc(e.ip) + '</td></tr>';
+  });
+  if (!S.log.length) h += '<tr><td colspan="9"><div class="empty"><img src="/img/theme/m-hi.webp" alt="">Belum ada aksi.</div></td></tr>';
+  return h + '</table></div><a class="btn" href="/export.xlsx">Ekspor ke Excel (.xlsx)</a>';
+}
+
+/* ---------- admin ---------- */
+function adminHTML() {
+  if (!adminPw) return '<div class="admhead"><img src="/img/theme/m-blush.webp" alt=""><h2 style="margin:0">Admin</h2></div>'
+    + '<form id="admf" class="admform"><input id="admpw" type="password" placeholder="Password" autocomplete="off" required><button class="btn" type="submit">Masuk</button></form>';
+  var h = '<h2>Admin \u00b7 Reset Pos</h2><div class="adm-grid">';
+  S.pos.forEach(function (p) {
+    var n = 0; for (var k in S.rows) if (k.indexOf(p + '|') === 0) { var r = S.rows[k]; n += r[0] + r[1] + r[2]; }
+    h += '<div class="adm-card"><b>Pos ' + p + '</b><span class="mut">' + n + ' aksi tercatat</span>'
+      + '<button class="danger" data-reset="' + p + '"' + (n ? '' : ' disabled') + '>Reset Pos ' + p + '</button></div>';
+  });
+  var d = S.denah || {};
+  h += '</div><h2 style="margin-top:22px">Denah \u00b7 Google Sheets</h2>' + syncBar()
+    + '<form id="denf"><textarea class="links" id="dlinks" spellcheck="false" placeholder="Link Google Sheets, satu per baris">' + esc((d.links || []).join('\n')) + '</textarea>'
+    + '<div class="admrow">Sinkron tiap <input id="dint" type="number" min="10" max="600" value="' + (d.interval || 30) + '"> detik'
+    + '<button class="btn" type="submit">Simpan &amp; sinkron</button><button class="btn" type="button" id="dsync">Sinkron sekarang</button></div></form>';
+  if (d.found && d.found.length) h += '<div class="mut" style="font-size:12px">Terbaca: ' + esc(d.found.join(', ')) + ' \u00b7 ' + Object.keys(d.items || {}).length + ' tim</div>';
+  return h + '<button class="btn" id="admout">Keluar admin</button>';
+}
+function denahSync() {
+  toast('Menyinkron\u2026', 1);
+  adminPost('/api/admin/denah-sync', { password: adminPw }).then(function (d) {
+    if (d.ok) { S.denah = d.denah; render(); toast(d.denah.err ? '\u26a0 ' + d.denah.err : 'Denah tersinkron', !d.denah.err); } else toast(d.err || 'Gagal');
+  }).catch(function () { toast('Gagal terkirim \u2014 cek koneksi WiFi'); });
+}
+function adminPost(path, body) {
+  return fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(function (r) { return r.json(); });
+}
+document.addEventListener('submit', function (e) {
+  if (e.target.id === 'denf') {
+    e.preventDefault(); toast('Menyimpan & menyinkron\u2026', 1);
+    adminPost('/api/admin/denah', { password: adminPw, links: $('#dlinks').value.split(/\s+/), interval: +$('#dint').value }).then(function (d) {
+      if (d.ok) { S.denah = d.denah; $('#dlinks').blur(); render(); toast(d.denah.err ? '\u26a0 ' + d.denah.err : 'Tersimpan & tersinkron', !d.denah.err); } else toast(d.err || 'Gagal');
+    }).catch(function () { toast('Gagal terkirim \u2014 cek koneksi WiFi'); });
+    return;
+  }
+  if (e.target.id !== 'admf') return;
+  e.preventDefault();
+  var pw = $('#admpw').value;
+  adminPost('/api/admin/login', { password: pw }).then(function (d) {
+    if (d.ok) { adminPw = pw; render(); } else { toast(d.err || 'Gagal'); $('#admpw').select(); }
+  }).catch(function () { toast('Gagal terkirim \u2014 cek koneksi WiFi'); });
+});
+function doReset(p) {
+  var c = prompt('Reset SEMUA data Pos ' + p + '?\nSaldo ' + S.tim + ' tim kembali ke ' + S.start + ' dan stok dikembalikan. Tidak bisa dibatalkan.\n\nKetik  RESET ' + p + '  untuk melanjutkan:');
+  if (c === null) return;
+  if (c.trim().toUpperCase() !== 'RESET ' + p) { toast('Konfirmasi tidak cocok \u2014 reset dibatalkan'); return; }
+  adminPost('/api/admin/reset', { password: adminPw, pos: p, user: user }).then(function (d) {
+    if (d.ok) { toast('Pos ' + p + ' sudah direset', 1); loadState(); }
+    else { toast(d.err || 'Gagal'); if (/password/i.test(d.err || '')) { adminPw = ''; render(); } }
+  }).catch(function () { toast('Gagal terkirim \u2014 cek koneksi WiFi'); });
+}
+
+function askName() {
+  var last = ''; try { last = localStorage.getItem('user') || ''; } catch (e) {}
+  $('#askin').value = user || last; $('#ask').hidden = false; setTimeout(function () { $('#askin').focus(); $('#askin').select(); }, 50);
+}
+$('#askf').addEventListener('submit', function (e) {
+  e.preventDefault(); var v = $('#askin').value.trim(); if (!v) return;
+  user = v; store('user', v); try { localStorage.setItem('user', v); } catch (x) {}
+  $('#ask').hidden = true; render();
+});
+user = sget('user'); pos = sget('pos');
+view = parseHash();
+if (!user) askName();
+connect(); loadState();
+</script>
+</body>
+</html>
