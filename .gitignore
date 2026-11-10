@@ -1,0 +1,7 @@
+node_modules/
+graphify-out/
+
+# data runtime (dibuat otomatis oleh server, jangan di-commit)
+events.jsonl
+denah-config.json
+denah-cache.json
