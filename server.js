@@ -173,8 +173,11 @@ function checkAdmin(ip, pw) {
 }
 // Token login: tetap sama selama password tidak diganti, jadi perangkat yang sudah login tetap masuk walau server restart.
 // Dua peran: username "admin" + ADMIN_PW → admin; nama lain + LOGIN_PW → umum.
-const TOKEN = crypto.createHash('sha256').update('pos-soal|' + LOGIN_PW).digest('hex');
-const ADMIN_TOKEN = crypto.createHash('sha256').update('pos-soal-admin|' + ADMIN_PW).digest('hex');
+// Token per username: "<peran>.<username base64url>.<tanda tangan>". Server tahu siapa yang menekan tombol,
+// dan token otomatis tidak berlaku lagi kalau salah satu password diganti.
+const SECRET = crypto.createHash('sha256').update('pos-soal|' + LOGIN_PW + '|' + ADMIN_PW).digest();
+const sign = (role, user) => crypto.createHmac('sha256', SECRET).update(role + '|' + user).digest('hex');
+const makeToken = (role, user) => `${role}.${Buffer.from(user, 'utf8').toString('base64url')}.${sign(role, user)}`;
 function doLogin(ip, user, pw) {
   user = String(user || '').trim().replace(/\s+/g, ' ').slice(0, 30);
   if (!user) return { ok: false, err: 'Username wajib diisi' };
@@ -182,24 +185,46 @@ function doLogin(ip, user, pw) {
   if (f.until > Date.now()) return { ok: false, err: 'Terlalu banyak percobaan salah. Coba lagi sebentar.' };
   const isAdminName = user.toLowerCase() === 'admin';
   const good = crypto.timingSafeEqual(sha(pw), sha(isAdminName ? ADMIN_PW : LOGIN_PW));
-  if (good) { failed.delete(k); return isAdminName ? { ok: true, token: ADMIN_TOKEN, role: 'admin', user: 'admin' } : { ok: true, token: TOKEN, role: 'umum', user }; }
+  if (good) { failed.delete(k); return isAdminName ? { ok: true, token: makeToken('admin', 'admin'), role: 'admin', user: 'admin' } : { ok: true, token: makeToken('umum', user), role: 'umum', user }; }
   if (++f.n >= 5) { f.n = 0; f.until = Date.now() + 60000; }
   failed.set(k, f);
   if (isAdminName && crypto.timingSafeEqual(sha(pw), sha(LOGIN_PW))) return { ok: false, err: 'Username "admin" hanya untuk panitia admin. Pakai nama lain.' };
   return { ok: false, err: 'Username atau password salah' };
 }
 const teq = (a, b) => a.length === b.length && crypto.timingSafeEqual(Buffer.from(a), Buffer.from(b));
-function roleOf(req) {
-  const q = /[?&]t=([0-9a-f]{64})(?:&|$)/.exec(req.url || '');
-  const t = String(req.headers['x-token'] || (q && q[1]) || '');
-  return teq(t, ADMIN_TOKEN) ? 'admin' : teq(t, TOKEN) ? 'umum' : null;
+// Mode Admin (di perangkat user biasa): password admin -> token "mode" khusus username itu; dibutuhkan untuk Undo.
+function modeOn(req, who) {
+  const t = String(req.headers['x-mode'] || '');
+  const m = /^mode\.([A-Za-z0-9_-]{1,80})\.([0-9a-f]{64})$/.exec(t);
+  if (!m || !who) return false;
+  const user = Buffer.from(m[1], 'base64url').toString('utf8');
+  return user === who.user && teq(m[2], sign('mode', user));
 }
-function handleReset(body, ip) {
+function checkAdminPw(ip, pw) {
+  const k = 'M' + ip, f = failed.get(k) || { n: 0, until: 0 };
+  if (f.until > Date.now()) return 'Terlalu banyak percobaan salah. Coba lagi sebentar.';
+  if (crypto.timingSafeEqual(sha(pw), sha(ADMIN_PW))) { failed.delete(k); return null; }
+  if (++f.n >= 5) { f.n = 0; f.until = Date.now() + 60000; }
+  failed.set(k, f);
+  return 'Password admin salah';
+}
+function whoOf(req) { // -> { role, user } atau null
+  const q = /[?&]t=([^&]+)/.exec(req.url || '');
+  let t = String(req.headers['x-token'] || '');
+  if (!t && q) try { t = decodeURIComponent(q[1]); } catch (e) { t = ''; }
+  const m = /^(admin|umum)\.([A-Za-z0-9_-]{1,80})\.([0-9a-f]{64})$/.exec(t);
+  if (!m) return null;
+  const user = Buffer.from(m[2], 'base64url').toString('utf8');
+  if (!teq(m[3], sign(m[1], user))) return null;
+  if ((m[1] === 'admin') !== (user === 'admin')) return null;
+  return { role: m[1], user };
+}
+function handleReset(body, ip, who) {
   const pos = String(body.pos || '');
   if (!POS.includes(pos)) return { ok: false, err: 'Pos tidak valid' };
   doReset(pos);
   const n = ++seq;
-  const ent = { n, t: Date.now(), type: 'reset', pos, tim: 0, code: '-', act: 'reset', ip, user: String(body.user || 'admin').trim().slice(0, 30) || 'admin', d: 0 };
+  const ent = { n, t: Date.now(), type: 'reset', pos, tim: 0, code: '-', act: 'reset', ip, user: who.user, d: 0 };
   record(ent);
   fs.writeSync(fd, JSON.stringify(ent) + '\n');
   broadcast({ n, reset: pos, log: ent });
@@ -214,11 +239,10 @@ function handleDenahConfig(body, ip) {
 
 const seen = new Map(); // id permintaan -> hasil (idempoten bila dikirim ulang)
 
-function handleAction(body, ip, undo) {
+function handleAction(body, ip, undo, who) {
   if (body.id && seen.has(body.id)) return seen.get(body.id);
   const e = { pos: body.pos, tim: +body.tim, code: body.code, act: body.act };
-  const user = String(body.user || '').trim().slice(0, 30);
-  if (!user) return { ok: false, err: 'Nama/ID belum diisi' };
+  const user = who.user; // nama dari token login, bukan dari isian browser
   const r = undo ? doUndo(e) : doAct(e);
   let out;
   if (r.err) out = { ok: false, err: r.err };
@@ -259,7 +283,7 @@ function csvData() {
 }
 const lbl = e => e.type === 'reset' ? `${KN(e.pos)} (semua tim)` : `${TLB(e.pos, e.tim)} ${TINFO(e.pos, e.tim).nama}`.trim();
 function csvLog() {
-  const out = ['No,Waktu,Nama/ID,Tim,Kode Soal,Aksi,Dibatalkan,Perangkat (IP)'];
+  const out = ['No,Waktu,Username,Tim,Kode Soal,Aksi,Dibatalkan,IP'];
   for (const e of log) {
     const aksi = e.type === 'undo' ? `UNDO ${e.act}` : e.type === 'reset' ? 'RESET POS' : e.act;
     out.push([e.n, new Date(e.t).toLocaleString('id-ID'), e.user || '', lbl(e), e.code, aksi, e.undone ? 'ya' : '', e.ip].map(q).join(','));
@@ -332,7 +356,7 @@ function xlsxBook() {
     benar.push([TLB(p, t), TINFO(p, t).nama, TINFO(p, t).sekolah, ok.length, ok.join(', ')]);
   }
   const stok = [['Kode Soal', 'Kategori', 'Batas', 'Terpakai', 'Sisa']].concat(CODES.map(c => [c.code, c.cat, c.limit, used[c.code], c.limit - used[c.code]]));
-  const lg = [['No', 'Waktu', 'Nama/ID', 'Tim', 'Kode Soal', 'Aksi', 'Neleci', 'Saldo Tim', 'Catatan', 'Dibatalkan', 'Perangkat (IP)']].concat(log.map(e =>
+  const lg = [['No', 'Waktu', 'Username', 'Tim', 'Kode Soal', 'Aksi', 'Neleci', 'Saldo Tim', 'Catatan', 'Dibatalkan', 'IP']].concat(log.map(e =>
     [e.n, new Date(e.t).toLocaleString('id-ID'), e.user || '', lbl(e), e.code, e.type === 'undo' ? `UNDO ${e.act}` : e.type === 'reset' ? 'RESET POS' : e.act, typeof e.d === 'number' ? e.d : '', typeof e.bal === 'number' ? e.bal : '', e.warn || '', e.undone ? 'ya' : '', e.ip]));
   let rank = 0, prev = null, pp = '';
   const TL = tally();
@@ -385,9 +409,10 @@ const json = (res, code, obj) => { res.writeHead(code, { 'Content-Type': 'applic
 
 const server = http.createServer(async (req, res) => {
   const url = req.url.split('?')[0];
-  const ip = (req.socket.remoteAddress || '').replace('::ffff:', '');
+  // di Render semua akses lewat proxy: IP asli ada di X-Forwarded-For
+  const ip = (String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || '').replace('::ffff:', '');
   try {
-    if (req.method === 'GET' && (url === '/' || url === '/index.html')) {
+    if (req.method === 'GET' && (url === '/' || url === '/index.html' || url === '/home' || url === '/admin')) {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
       return res.end(fs.readFileSync(path.join(__dirname, 'public', 'index.html')));
     }
@@ -414,7 +439,7 @@ const server = http.createServer(async (req, res) => {
       return json(res, 200, doLogin(ip, body.user, body.password));
     }
     // semua data & aksi di bawah ini wajib login; fungsi admin & ekspor hanya untuk akun admin
-    const role = roleOf(req);
+    const who = whoOf(req), role = who && who.role;
     if ((url.startsWith('/api/') || url.startsWith('/export')) && !role) return json(res, 401, { ok: false, auth: false, err: 'Perlu login ulang' });
     if ((url.startsWith('/api/admin/') || url.startsWith('/export')) && role !== 'admin') return json(res, 403, { ok: false, err: 'Khusus admin' });
     if (req.method === 'GET' && url === '/api/state') {
@@ -434,10 +459,16 @@ const server = http.createServer(async (req, res) => {
       await denah.sync();
       return json(res, 200, { ok: true, denah: denah.state() });
     }
-    if (req.method === 'POST' && url === '/api/admin/reset') return json(res, 200, handleReset(await readBody(req), ip));
+    if (req.method === 'POST' && url === '/api/admin/reset') return json(res, 200, handleReset(await readBody(req), ip, who));
+    if (req.method === 'POST' && url === '/api/admin-mode') {
+      const bad = checkAdminPw(ip, (await readBody(req)).password);
+      return json(res, 200, bad ? { ok: false, err: bad } : { ok: true, mode: makeToken('mode', who.user) });
+    }
+    if (req.method === 'POST' && url === '/api/undo' && role !== 'admin' && !modeOn(req, who))
+      return json(res, 403, { ok: false, err: 'Undo hanya bisa dalam Mode Admin' });
     if (req.method === 'POST' && (url === '/api/act' || url === '/api/undo')) {
       const body = await readBody(req);
-      return json(res, 200, handleAction(body, ip, url === '/api/undo'));
+      return json(res, 200, handleAction(body, ip, url === '/api/undo', who));
     }
     if (req.method === 'GET' && url === '/export.xlsx') {
       res.writeHead(200, { 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Content-Disposition': 'attachment; filename="pos-soal.xlsx"' });

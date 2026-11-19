@@ -341,6 +341,36 @@ header span.who{cursor:default}
 .navout[hidden]{display:none}
 #askpwrow{display:block}
 #askpwrow[hidden]{display:none}
+/* header */
+.hbtn{flex:none;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);color:#fff;font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.hbtn:hover{background:rgba(255,255,255,.2)}
+.hbtn.modeon{background:var(--yel);border-color:var(--yel);color:var(--ink)}
+header .hbtn.exitb{background:#d63a3a;border-color:#d63a3a;color:#fff}
+header .hbtn.exitb:hover{background:#bf2f2f}
+/* Pos Soal: panel kelompok A-E */
+/* kotak putih menyisakan ruang di kanan untuk tombol A-E (menempel saat di-scroll) */
+main.teamv{max-width:min(900px,calc(100vw - 260px))}
+@media(min-width:521px) and (max-width:1160px){main.teamv{margin-left:132px;margin-right:16px}}
+.poswrap{display:block}
+.kside{position:fixed;z-index:6;top:76px;left:max(20px,calc((100vw - 900px)/2 - 116px));display:flex;flex-direction:column;gap:12px}
+.kside button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:92px;height:92px;border-radius:20px;border:0;
+  background:#fff;color:var(--ink);cursor:pointer;font:inherit;box-shadow:0 10px 26px -10px rgba(0,0,0,.6);transition:background .15s,transform .12s,box-shadow .15s}
+.kside button b{font-size:34px;line-height:1;font-weight:800}
+.kside button small{font-size:11.5px;color:var(--mut);font-weight:600}
+.kside button:hover{transform:translateX(3px);background:#fffbe9}
+.kside button.on{background:var(--yel);box-shadow:0 10px 26px -10px rgba(0,0,0,.6),inset 0 -4px 0 rgba(0,0,0,.14),0 0 0 4px rgba(252,178,0,.3)}
+.kside button.on small{color:var(--ink)}
+@media(max-height:620px){.kside{top:62px;gap:8px}.kside button{width:76px;height:76px}.kside button b{font-size:28px}}
+button.u.locked{opacity:.35;cursor:not-allowed}
+/* dialog Mode Admin */
+#modeov{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;background:rgba(4,2,24,.6);padding:16px}
+#modeov[hidden]{display:none}
+#modef{width:min(320px,100%);background:#fff;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:10px;text-align:center;box-shadow:0 18px 50px -12px rgba(0,0,0,.6)}
+#modef img{width:70px;margin:-56px auto 0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#4e3472,#160f47 72%);padding:6px}
+#modef input{padding:10px;border:1px solid #bbb;border-radius:8px;font:inherit;text-align:center}
+#modef .mrow{display:flex;gap:8px;justify-content:center}
+#modef .btn{margin:0}
+#modef .btn.pri{background:var(--ink);color:#fff}
 #off{position:fixed;left:12px;bottom:12px;z-index:25;display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:4px 14px 4px 4px;font-size:13px;font-weight:600;color:#a32020;box-shadow:0 8px 24px rgba(0,0,0,.4)}
 #off img{width:36px}
 #off[hidden]{display:none}
@@ -367,6 +397,13 @@ header span.who{cursor:default}
   .gbtn{font-size:19px;padding:13px 44px;width:250px}
   .gbtn .ext{right:20px}
   .atabs a{padding:6px 11px;font-size:12.5px}
+  main.teamv{max-width:none}
+  .kside{position:sticky;top:50px;left:auto;flex-direction:row;gap:8px;margin:-10px -10px 10px;padding:10px;background:#fff;border-radius:14px 14px 0 0;box-shadow:0 6px 10px -8px rgba(0,0,0,.25)}
+  .kside button{flex:1;width:auto;height:58px;border-radius:14px;border:1px solid var(--line);box-shadow:none}
+  .kside button b{font-size:24px}
+  .kside button small{font-size:9px}
+  .kside button:hover{transform:none}
+  .hbtn{padding:5px 9px;font-size:12px}
   .srow{grid-template-columns:1fr;gap:4px;margin-bottom:10px}
   .slab{padding:5px 10px}
   .stock{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -395,16 +432,7 @@ header span.who{cursor:default}
   <img src="/img/theme/a-dark-1.webp" alt="" style="left:81.0%;bottom:27.0vh;--w:3.6;--r:40deg;--f:-1;opacity:0.75;filter:blur(0.9px);animation-duration:12s;animation-delay:-8s">
   <img src="/img/theme/p-asteroid.webp" alt="" style="left:87.0%;bottom:8.0vh;--w:14.0;--r:-14deg;--f:1;opacity:1.00;filter:blur(0.0px);animation-duration:11s;animation-delay:-2s">
 </div>
-<div id="navbg"></div>
-<aside id="nav" aria-label="Menu">
-  <div class="navtop"><img src="/img/theme/logo.webp" alt="Schematics NLC"><button class="navx" id="navx" aria-label="Tutup menu">&times;</button></div>
-  <nav>
-    <a data-nav href="#home">Dashboard</a>
-    <a data-nav href="#admin" id="navadm" hidden>Admin</a>
-    <button class="navout" id="logout">Keluar</button>
-  </nav>
-  <img class="navm" src="/img/theme/m-astro.webp" alt="">
-</aside>
+<div id="modeov" hidden><form id="modef"><img src="/img/theme/m-blush.webp" alt=""><b>Mode Admin</b><input id="modepw" type="password" placeholder="Password admin" autocomplete="off" required><div class="mrow"><button type="button" class="btn" id="modecancel">Batal</button><button class="btn pri" type="submit">Aktifkan</button></div></form></div>
 <header><div class="bar" id="head"></div></header>
 <main id="main"><p class="mut">Memuat…</p></main>
 <div id="toast"><img id="toasti" src="/img/theme/m-happy.webp" alt=""><span id="toastm"></span></div>
@@ -413,6 +441,7 @@ header span.who{cursor:default}
 <script>
 'use strict';
 var adminPw = '', user = '', pos = '', S = null, conn = false, view = { v: 'home' }, busy = {}, tok = '', es = null;
+var modeTok = ''; // Mode Admin di perangkat user biasa: hanya di memori, mati sendiri saat refresh
 var LINKS = {
   denah: 'https://docs.google.com/spreadsheets/d/1BQ7-g9CV6u9IFy0tUtmydtrnZK4jwIr9jPy4n784Gmg/edit?usp=sharing',
   endday: 'https://docs.google.com/spreadsheets/d/1vaTa7rM4u2oyap6e1S7PVBJtmNbSQeBdeXbW7H0QSPw/edit?usp=sharing',
@@ -424,7 +453,8 @@ var ADMINV = ['admin', 'hasil', 'neleci', 'dash', 'log', 'reset'];
 function isAdm(v) { return ADMINV.indexOf(v) >= 0; }
 function lget(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
 function lset(k, v) { try { if (v) localStorage.setItem(k, v); else localStorage.removeItem(k); } catch (e) {} }
-function api(path, opt) { opt = opt || {}; opt.headers = opt.headers || {}; opt.headers['X-Token'] = tok; return fetch(path, opt); }
+function api(path, opt) { opt = opt || {}; opt.headers = opt.headers || {}; opt.headers['X-Token'] = tok; if (modeTok) opt.headers['X-Mode'] = modeTok; return fetch(path, opt); }
+function canUndo() { return !!adminPw || !!modeTok; }
 function xurl() { return '/export.xlsx?t=' + encodeURIComponent(tok); }
 var $ = function (s) { return document.querySelector(s); };
 var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]; }); };
@@ -456,23 +486,27 @@ document.addEventListener('pointermove', function (e) {
 });
 
 /* ---------- routing ---------- */
+var ADMIN_RE = /^(hasil|dash|log|reset|neleci(\/[A-E])?)$/;
 function parseHash() {
   var h = location.hash.slice(1);
-  if (pos) {
-    var m = /^([A-E])\/(\d+)$/.exec(h), t = 1;
-    if (m && m[1] === pos && +m[2] >= 1 && +m[2] <= 15) t = +m[2];
-    else t = +sget('tim' + pos) || 1;
-    return { v: 'team', t: t };
+  if (/^\/admin\/?$/.test(location.pathname)) {
+    pos = '';
+    var nm = /^neleci(?:\/([A-E]))?$/.exec(h); if (nm) return { v: 'neleci', k: nm[1] || '' };
+    return { v: ['dash', 'log', 'reset'].indexOf(h) >= 0 ? h : 'hasil' };
   }
-  if (h === 'kubu' || isAdm(h)) return { v: h };
-  var nm = /^neleci(?:\/([A-E]))?$/.exec(h); if (nm) return { v: 'neleci', k: nm[1] || '' };
-  return { v: 'home' };
+  var m = /^([A-E])(?:\/(\d+))?$/.exec(h);
+  if (m) { pos = m[1]; var t = +m[2] || +sget('tim' + pos) || 1; return { v: 'team', t: Math.min(Math.max(t, 1), 15) }; }
+  pos = ''; return { v: 'home' };
 }
-function route() { view = parseHash(); if (view.v === 'team') store('tim' + pos, view.t); render(); window.scrollTo(0, 0); }
-function go(h) { if (location.hash === '#' + h) route(); else location.hash = h; }
+function route() { view = parseHash(); if (view.v === 'team') { store('tim' + pos, view.t); lset('lastPos', pos); } render(); window.scrollTo(0, 0); }
+function go(h) { // pindah halaman tanpa reload; alamat: /admin#... untuk halaman admin, /home#... untuk lainnya
+  var url = (ADMIN_RE.test(h) ? '/admin' : '/home') + (h && h !== 'home' && h !== 'hasil' ? '#' + h : '');
+  if (location.pathname + location.hash !== url) history.pushState(null, '', url);
+  route();
+}
 window.addEventListener('hashchange', route);
-function enterPos(p) { pos = p; store('pos', p); go(p + '/' + (+sget('tim' + p) || 1)); }
-function exitPos() { pos = ''; store('pos', null); go('kubu'); }
+window.addEventListener('popstate', route);
+function enterPos(p) { go(p + '/' + (+sget('tim' + p) || 1)); }
 
 /* ---------- data ---------- */
 function row(p, t, c) { return S.rows[p + '|' + t + '|' + c] || [0, 0, 0]; }
@@ -566,48 +600,50 @@ function navOpen(v) { document.body.classList.toggle('navon', v); }
 document.addEventListener('keydown', function (e) { if (e.key === 'Escape') navOpen(false); });
 document.addEventListener('click', function (e) {
   var t = e.target;
-  if (t.closest('#menu')) { navOpen(!document.body.classList.contains('navon')); return; }
-  if (t.id === 'navbg' || t.id === 'navx') { navOpen(false); return; }
-  var na = t.closest('a[data-nav]');
-  if (na) { e.preventDefault(); navOpen(false); if (pos) { pos = ''; store('pos', null); } go(na.getAttribute('href').slice(1)); return; }
-  var p = t.closest('button[data-pos]'); if (p) { enterPos(p.dataset.pos); return; }
-  if (t.id === 'exit') { exitPos(); return; }
-  if (t.id === 'logout') { navOpen(false); logout(); return; }
+  var p = t.closest('[data-pos]'); if (p) { enterPos(p.dataset.pos); return; }
+  if (t.id === 'logout') { logout(); return; }
+  if (t.id === 'modeon') { $('#modepw').value = ''; $('#modeov').hidden = false; setTimeout(function () { $('#modepw').focus(); }, 30); return; }
+  if (t.id === 'modecancel') { $('#modeov').hidden = true; return; }
+  if (t.id === 'modeoff') { modeTok = ''; render(); toast('Mode Admin dimatikan', 1); return; }
   var dg = t.closest('[data-go]'); if (dg) { go(dg.dataset.go); return; }
   if (t.id === 'dsync') { denahSync(); return; }
-  var gt = t.closest('a[data-goto]'); if (gt) { e.preventDefault(); pos = gt.dataset.goto; store('pos', pos); go(gt.getAttribute('href').slice(1)); return; }
+  var gt = t.closest('a[data-goto]'); if (gt) { e.preventDefault(); go(gt.getAttribute('href').slice(1)); return; }
   var rs = t.closest('button[data-reset]'); if (rs && !rs.disabled) { doReset(rs.dataset.reset); return; }
   var b = t.closest('button[data-c]'); if (!b || b.disabled || !pos) return;
-  if (b.dataset.a === 'undo') send('/api/undo', 'undo', b.dataset.c); else send('/api/act', b.dataset.a, b.dataset.c);
+  if (b.dataset.a === 'undo') { if (!canUndo()) { toast('Undo hanya bisa dalam Mode Admin \u2014 minta admin mengaktifkannya'); return; } send('/api/undo', 'undo', b.dataset.c); }
+  else send('/api/act', b.dataset.a, b.dataset.c);
 });
 
 /* ---------- tampilan ---------- */
 function render() {
   if (!S || !user) return;
-  var h = '<button class="menu" id="menu" aria-label="Buka menu" aria-controls="nav"><span></span><span></span><span></span></button><span class="brand"><img src="/img/theme/logo.webp" alt="Schematics NLC">' + (isAdm(view.v) && adminPw ? '<span>ADMIN</span>' : '') + '</span>';
-  if (pos) h += '<span class="posb">' + kn(pos) + '</span><span class="sp"></span><button class="who exitb" id="exit">Keluar Pos</button>';
-  else h += '<span class="sp"></span>';
-  h += '<span class="who" title="' + (adminPw ? 'Login sebagai admin' : 'Login sebagai umum') + '">' + esc(user) + '</span><span id="dot" class="dot"></span>';
-  $('#head').innerHTML = h;
-  var cur = isAdm(view.v) ? 'admin' : 'home'; $('#navadm').hidden = !adminPw;
-  [].forEach.call(document.querySelectorAll('#nav a[data-nav]'), function (a) { a.classList.toggle('on', a.getAttribute('href').slice(1) === cur); }); $('#head').className = 'bar' + (pos ? ' inpos' : ''); dot();
   if (isAdm(view.v) && !adminPw) { go('home'); return; } // akun umum tidak punya halaman admin
-  if (view.v === 'admin') { go('hasil'); return; }
+  var h = '<span class="brand"><img src="/img/theme/logo.webp" alt="Schematics NLC">' + (isAdm(view.v) ? '<span>ADMIN</span>' : '') + '</span><span class="sp"></span>';
+  if (adminPw) h += isAdm(view.v) ? '<button class="hbtn" data-go="home">Dashboard</button>' : '<button class="hbtn" data-go="hasil">Admin</button>';
+  else if (view.v === 'team') h += modeTok ? '<button class="hbtn modeon" id="modeoff">Keluar Mode Admin</button>' : '<button class="hbtn" id="modeon">Mode Admin</button>';
+  h += '<span class="who" title="' + (adminPw ? 'Login sebagai admin' : 'Login sebagai umum') + '">' + esc(user) + '</span>'
+    + '<button class="hbtn exitb" id="logout">Keluar</button><span id="dot" class="dot"></span>';
+  $('#head').innerHTML = h; $('#head').className = 'bar' + (pos ? ' inpos' : ''); dot();
   var draft = view.v === 'reset' && $('#dlinks') ? [$('#dlinks').value, $('#sdlinks') && $('#sdlinks').value] : null;
-  $('#main').className = view.v === 'home' || view.v === 'kubu' ? 'home' : '';
+  $('#main').className = view.v === 'home' ? 'home' : view.v === 'team' ? 'teamv' : '';
   $('#main').innerHTML = isAdm(view.v) ? adminTabs() + (view.v === 'reset' ? resetHTML() : view.v === 'dash' ? dashHTML() : view.v === 'log' ? logHTML() : view.v === 'neleci' ? neleciHTML(view.k) : hasilHTML())
-    : view.v === 'team' ? teamHTML(pos, view.t) : view.v === 'kubu' ? homeHTML() : menuHTML();
+    : view.v === 'team' ? posSide() + '<div class="pmain">' + teamHTML(pos, view.t) + '</div></div>' : menuHTML();
   var ap = $('#admpw'); if (ap && !ap.value) ap.focus();
   if (draft && $('#dlinks')) { $('#dlinks').value = draft[0]; if (draft[1] != null && $('#sdlinks')) $('#sdlinks').value = draft[1]; }
 }
 
+function posSide() {
+  return '<div class="poswrap"><nav class="kside" aria-label="Pilih kelompok">' + S.pos.map(function (p) {
+    return '<button data-pos="' + p + '"' + (p === pos ? ' class="on" aria-current="true"' : '') + ' title="' + esc(kn(p)) + '"><b>' + p + '</b><small>' + esc(kn(p)) + '</small></button>';
+  }).join('') + '</nav>';
+}
 function menuHTML() {
-  var items = [['Pos Soal', '', 'kubu'], ['Denah Kota', LINKS.denah], ['Wave Creep', LINKS.wave], ['Supply Drop', LINKS.sd], ['End Day', LINKS.endday]];
+  var items = [['Pos Soal', '', 'pos'], ['Denah Kota', LINKS.denah], ['Wave Creep', LINKS.wave], ['Supply Drop', LINKS.sd], ['End Day', LINKS.endday]];
   var h = '<img class="ufo" src="/img/theme/ufo.webp" alt="" aria-hidden="true"><div class="hero"><img class="logo" src="/img/theme/logo.webp" alt="Schematics NLC"><p class="tag">Dashboard</p></div>'
     + '<div class="menulist"><img class="m-hi" src="/img/theme/m-hi.webp" alt="">';
   items.forEach(function (x) {
     h += x[2]
-      ? '<button class="gbtn" data-go="' + x[2] + '">' + x[0] + '</button>'
+      ? '<button class="gbtn" data-pos="' + (lget('lastPos') || 'A') + '">' + x[0] + '</button>'
       : '<a class="gbtn" href="' + x[1] + '" target="_blank" rel="noopener">' + x[0] + '<span class="ext" aria-label="buka di tab baru">\u2197</span></a>';
   });
   return h + '</div>';
@@ -648,7 +684,7 @@ function teamHTML(p, t) {
       + '<td class="act' + cn + '">' + btn('beli',  c.code, 'Beli',  r[0], fz || lf <= 0 || r[0] > r[1]) + '</td>'
       + '<td class="act' + cn + '">' + btn('salah', c.code, 'Salah', r[1], !okSB) + '</td>'
       + '<td class="act' + cn + '">' + btn('benar', c.code, 'Benar', r[2], !okSB) + '</td>'
-      + '<td class="act"><button class="u" data-a="undo" data-c="' + c.code + '" title="Batalkan aksi terakhir"' + (any ? '' : ' disabled') + '>\u21a9</button></td>'
+      + '<td class="act"><button class="u' + (canUndo() ? '' : ' locked') + '" data-a="undo" data-c="' + c.code + '" title="' + (canUndo() ? 'Batalkan aksi terakhir' : 'Undo hanya dalam Mode Admin') + '"' + (any ? '' : ' disabled') + '>\u21a9</button></td>'
       + '</tr>';
   });
   h += '</table></div><h3>Rekap</h3><table class="sum"><tr><th>Kategori</th><th>Kode</th><th class="n">Jumlah Benar</th></tr>';
@@ -768,14 +804,14 @@ function dashHTML() {
 }
 
 function logHTML() {
-  var h = '<h2>Log</h2><div class="scroll"><table><tr><th>Waktu</th><th>Nama/ID</th><th>Tim</th><th>Soal</th><th>Aksi</th><th class="n">Neleci</th><th class="n">Saldo Soal</th><th>Catatan</th><th>Perangkat</th></tr>';
+  var h = '<h2>Log</h2><div class="scroll"><table><tr><th>Waktu</th><th>Username</th><th>Tim</th><th>Soal</th><th>Aksi</th><th class="n">Neleci</th><th class="n">Saldo Soal</th><th>Catatan</th></tr>';
   S.log.slice(0, 300).forEach(function (e) {
     var a = e.type === 'undo' ? '\u21a9 batal ' + e.act : e.type === 'reset' ? 'RESET POS' : e.act;
     var lbl = e.type === 'reset' ? kn(e.pos) + ' (semua tim)' : tcell(e.pos, e.tim);
     var d = typeof e.d === 'number' ? '<span class="' + (e.d > 0 ? 'pos' : e.d < 0 ? 'neg' : '') + '">' + sign(e.d) + '</span>' : '-';
-    h += '<tr class="' + (e.undone ? 'struck' : '') + '"' + (e.warn ? ' style="background:#fff4f4"' : '') + '><td>' + new Date(e.t).toLocaleTimeString('id-ID') + '</td><td>' + esc(e.user || '-') + '</td><td>' + lbl + '</td><td>' + e.code + '</td><td>' + esc(a) + '</td><td class="n">' + d + '</td><td class="n">' + (typeof e.bal === 'number' ? e.bal : '-') + '</td><td class="neg">' + (e.warn ? '\u26a0 ' + esc(e.warn) : '') + '</td><td>' + esc(e.ip) + '</td></tr>';
+    h += '<tr class="' + (e.undone ? 'struck' : '') + '"' + (e.warn ? ' style="background:#fff4f4"' : '') + '><td>' + new Date(e.t).toLocaleTimeString('id-ID') + '</td><td>' + esc(e.user || '-') + '</td><td>' + lbl + '</td><td>' + e.code + '</td><td>' + esc(a) + '</td><td class="n">' + d + '</td><td class="n">' + (typeof e.bal === 'number' ? e.bal : '-') + '</td><td class="neg">' + (e.warn ? '\u26a0 ' + esc(e.warn) : '') + '</td></tr>';
   });
-  if (!S.log.length) h += '<tr><td colspan="9"><div class="empty"><img src="/img/theme/m-hi.webp" alt="">Belum ada aksi.</div></td></tr>';
+  if (!S.log.length) h += '<tr><td colspan="8"><div class="empty"><img src="/img/theme/m-hi.webp" alt="">Belum ada aksi.</div></td></tr>';
   return h + '</table></div><a class="btn" href="' + xurl() + '">Ekspor ke Excel (.xlsx)</a>';
 }
 
@@ -821,6 +857,14 @@ function adminPost(path, body) {
   return api(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).then(function (r) { if (r.status === 401) { needLogin(); throw 0; } return r.json(); });
 }
 document.addEventListener('submit', function (e) {
+  if (e.target.id === 'modef') {
+    e.preventDefault();
+    api('/api/admin-mode', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: $('#modepw').value }) })
+      .then(function (r) { if (r.status === 401) { needLogin(); throw 0; } return r.json(); })
+      .then(function (d) { if (d.ok) { modeTok = d.mode; $('#modeov').hidden = true; render(); toast('Mode Admin aktif \u2014 Undo bisa dipakai', 1); } else { toast(d.err || 'Gagal'); $('#modepw').select(); } })
+      .catch(function (x) { if (x !== 0) toast('Gagal terkirim \u2014 cek koneksi WiFi'); });
+    return;
+  }
   if (e.target.id === 'denf') {
     e.preventDefault(); toast('Menyimpan & menyinkron\u2026', 1);
     adminPost('/api/admin/denah', { links: $('#dlinks').value.split(/\s+/), sdLinks: $('#sdlinks').value.split(/\s+/), interval: +$('#dint').value }).then(function (d) {
@@ -850,7 +894,7 @@ function clearLogin() {
   if (es) { es.close(); es = null; } conn = false; dot();
 }
 function needLogin() { clearLogin(); askName(); } // token ditolak server (mis. password diganti) -> login lagi
-function logout() { clearLogin(); S = null; $('#main').innerHTML = ''; $('#head').innerHTML = ''; location.hash = 'home'; askName(); }
+function logout() { clearLogin(); modeTok = ''; S = null; $('#main').innerHTML = ''; $('#head').innerHTML = ''; history.replaceState(null, '', '/home'); askName(); }
 $('#askf').addEventListener('submit', function (e) {
   e.preventDefault(); var v = $('#askin').value.trim(); if (!v) return;
   fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user: v, password: $('#askpw').value }) })
@@ -860,11 +904,14 @@ $('#askf').addEventListener('submit', function (e) {
       tok = d.token; user = d.user; adminPw = d.role === 'admin' ? '1' : '';
       lset('tok', tok); lset('role', d.role); lset('user', user); lset('lastUser', user);
       $('#ask').hidden = true; $('#toast').className = '';
+      if (d.role === 'admin') history.replaceState(null, '', '/admin');           // admin langsung ke halaman admin
+      else if (!/^#[A-E]/.test(location.hash)) history.replaceState(null, '', '/home');
       view = parseHash(); connect(); loadState();
     })
     .catch(function () { toast('Gagal terhubung ke server \u2014 cek koneksi WiFi'); });
 });
-tok = lget('tok'); user = lget('user'); adminPw = lget('role') === 'admin' ? '1' : ''; pos = sget('pos');
+tok = lget('tok'); user = lget('user'); adminPw = lget('role') === 'admin' ? '1' : '';
+if (location.pathname === '/' || location.pathname === '/index.html') history.replaceState(null, '', (adminPw ? '/admin' : '/home') + location.hash);
 view = parseHash();
 if (!tok || !user) { clearLogin(); askName(); }
 else { connect(); loadState(); }
