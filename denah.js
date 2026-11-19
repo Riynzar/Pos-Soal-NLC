@@ -106,7 +106,7 @@ function checkPlacement(sh, p, TIM, place) {
 }
 function parseDenah(sheets, POS, TIM) {
   const items = {}, found = [], warns = [], diag = [], place = {};
-  const lab = new RegExp('^([' + POS.join('') + '])\\s*-\\s*(\\d{1,2})$', 'i');
+  const lab = new RegExp('^([' + POS.join('') + '])\\s*-\\s*(\\d{1,2})(?:\\s.*)?$', 'i'); // "A-1" atau "A-1 Nama Tim"
   for (const sh of sheets) {
     let hdr = null, n = 0;
     for (let ri = 0; ri < sh.grid.length; ri++) {
@@ -161,7 +161,7 @@ const SD_KIND = [['N', /NUTRISI/], ['H', /HIDRASI/], ['P', /PROTEKSI/]];
 // hanya kotak centang (boolean TRUE) atau tanda centang tertulis — angka 1 TIDAK dihitung
 const truthy = v => v === true || ['TRUE', 'YA', '\u2713', '\u2714', '\u2611', 'BENAR'].includes(norm(v));
 function parseSD(sheets, POS, TIM) {
-  const lab = new RegExp('^([' + POS.join('') + '])\\s*-\\s*(\\d{1,2})$', 'i');
+  const lab = new RegExp('^([' + POS.join('') + '])\\s*-\\s*(\\d{1,2})(?:\\s.*)?$', 'i'); // "A-1" atau "A-1 Nama Tim"
   const sd = {}, found = [], count = { N: 0, H: 0, P: 0 };
   for (const sh of sheets) {
     let kind = (SD_KIND.find(([, re]) => re.test(norm(sh.name))) || [])[0];
