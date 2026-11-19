@@ -30,6 +30,8 @@ let seq = 0;
 const rows = {};            // "A|1|H-1" -> [beli, salah, benar]
 const used = {};            // kode -> sum(beli - salah) di semua pos & tim
 const log = [];             // semua entri log (lama -> baru)
+let logCut = 0;             // Reset Log: entri dengan n <= logCut disembunyikan (data/saldo tidak berubah)
+const shownLog = () => log.filter(e => e.n > logCut);
 const byN = new Map();
 const stacks = {};          // key baris -> daftar n aksi yang belum di-undo
 CODES.forEach(c => (used[c.code] = 0));
@@ -148,6 +150,7 @@ if (fs.existsSync(EVENTS)) {
       if (r.ok) { ev.d = r.d; ev.bal = r.bal; ev.warn = r.warn; record(ev); }
     }
     else if (ev.type === 'reset' && POS.includes(ev.pos)) { doReset(ev.pos); ev.d = 0; record(ev); }
+    else if (ev.type === 'logreset') logCut = ev.n;
     seq = Math.max(seq, ev.n || 0);
   }
 }
@@ -231,6 +234,14 @@ function handleReset(body, ip, who) {
   return { ok: true };
 }
 
+function handleLogReset(ip, who) {
+  const n = ++seq;
+  logCut = n;
+  fs.writeSync(fd, JSON.stringify({ n, t: Date.now(), type: 'logreset', ip, user: who.user }) + '\n');
+  broadcast({ n, reset: 'log' });
+  return { ok: true };
+}
+
 function handleDenahConfig(body, ip) {
   const links = Array.isArray(body.links) ? body.links : String(body.links || '').split(/\s+/);
   const sdLinks = body.sdLinks == null ? null : Array.isArray(body.sdLinks) ? body.sdLinks : String(body.sdLinks).split(/\s+/);
@@ -284,7 +295,7 @@ function csvData() {
 const lbl = e => e.type === 'reset' ? `${KN(e.pos)} (semua tim)` : `${TLB(e.pos, e.tim)} ${TINFO(e.pos, e.tim).nama}`.trim();
 function csvLog() {
   const out = ['No,Waktu,Username,Tim,Kode Soal,Aksi,Dibatalkan,IP'];
-  for (const e of log) {
+  for (const e of shownLog()) {
     const aksi = e.type === 'undo' ? `UNDO ${e.act}` : e.type === 'reset' ? 'RESET POS' : e.act;
     out.push([e.n, new Date(e.t).toLocaleString('id-ID'), e.user || '', lbl(e), e.code, aksi, e.undone ? 'ya' : '', e.ip].map(q).join(','));
   }
@@ -356,7 +367,7 @@ function xlsxBook() {
     benar.push([TLB(p, t), TINFO(p, t).nama, TINFO(p, t).sekolah, ok.length, ok.join(', ')]);
   }
   const stok = [['Kode Soal', 'Kategori', 'Batas', 'Terpakai', 'Sisa']].concat(CODES.map(c => [c.code, c.cat, c.limit, used[c.code], c.limit - used[c.code]]));
-  const lg = [['No', 'Waktu', 'Username', 'Tim', 'Kode Soal', 'Aksi', 'Neleci', 'Saldo Tim', 'Catatan', 'Dibatalkan', 'IP']].concat(log.map(e =>
+  const lg = [['No', 'Waktu', 'Username', 'Tim', 'Kode Soal', 'Aksi', 'Neleci', 'Saldo Tim', 'Catatan', 'Dibatalkan', 'IP']].concat(shownLog().map(e =>
     [e.n, new Date(e.t).toLocaleString('id-ID'), e.user || '', lbl(e), e.code, e.type === 'undo' ? `UNDO ${e.act}` : e.type === 'reset' ? 'RESET POS' : e.act, typeof e.d === 'number' ? e.d : '', typeof e.bal === 'number' ? e.bal : '', e.warn || '', e.undone ? 'ya' : '', e.ip]));
   let rank = 0, prev = null, pp = '';
   const TL = tally();
@@ -445,7 +456,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'GET' && url === '/api/state') {
       const nz = {};
       for (const k in rows) if (rows[k][0] || rows[k][1] || rows[k][2]) nz[k] = rows[k];
-      return json(res, 200, { codes: CODES, pos: POS, tim: TIM, rows: nz, used, start: START, saldo, log: log.slice(-500).reverse(), seq, itemPrice: ITEM_PRICE, kubu: KUBU, denah: denah.state() });
+      return json(res, 200, { codes: CODES, pos: POS, tim: TIM, rows: nz, used, start: START, saldo, log: shownLog().slice(-500).reverse(), seq, itemPrice: ITEM_PRICE, kubu: KUBU, denah: denah.state() });
     }
     if (req.method === 'GET' && url === '/api/stream') {
       res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', Connection: 'keep-alive', 'X-Accel-Buffering': 'no' });
@@ -458,6 +469,11 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'POST' && url === '/api/admin/denah-sync') {
       await denah.sync();
       return json(res, 200, { ok: true, denah: denah.state() });
+    }
+    if (req.method === 'POST' && url === '/api/admin/reset-log') {
+      const body = await readBody(req);
+      if (String(body.confirm || '').trim().toUpperCase() !== 'RESET LOG') return json(res, 200, { ok: false, err: 'Konfirmasi salah' });
+      return json(res, 200, handleLogReset(ip, who));
     }
     if (req.method === 'POST' && url === '/api/admin/reset') return json(res, 200, handleReset(await readBody(req), ip, who));
     if (req.method === 'POST' && url === '/api/admin-mode') {

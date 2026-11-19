@@ -317,6 +317,7 @@ main.home .hero{padding-top:0}
 .navm{width:150px;margin:auto auto 14px;display:block;opacity:.95}
 .menulist{position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;width:min(380px,100%);margin:30px auto 0}
 .menulist .m-hi{position:absolute;right:-70px;top:-58px;width:76px;pointer-events:none}
+.menulist .m-left{position:absolute;left:-150px;bottom:-14px;width:120px;pointer-events:none;animation:bob 3.6s ease-in-out infinite;animation-delay:-1.2s}
 .gbtn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:290px;max-width:100%;padding:15px 48px;border-radius:999px;
   background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.3);
   -webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%);
@@ -360,7 +361,7 @@ main.teamv{max-width:min(900px,calc(100vw - 260px))}
 .kside button b{font-size:34px;line-height:1;font-weight:800}
 .kside button small{font-size:11.5px;font-weight:600;opacity:.8}
 .kside button:hover{transform:translateX(3px);border-color:rgba(252,178,0,.75)}
-.kside button.on{background:linear-gradient(180deg,rgba(255,190,60,.62),rgba(247,144,47,.42));border-color:rgba(255,205,110,.9);color:#fff;
+.kside button.on{background:var(--yel);border-color:var(--yel);color:var(--ink);-webkit-backdrop-filter:none;backdrop-filter:none;
   box-shadow:0 12px 30px -10px rgba(247,144,47,.65),0 0 0 3px rgba(252,178,0,.22),inset 0 1px 0 rgba(255,255,255,.45)}
 .kside button.on small{opacity:1}
 /* Pos Soal: kotak atas menempel, kotak bawah digulir */
@@ -422,6 +423,7 @@ button.u.locked{opacity:.35;cursor:not-allowed}
   .pickpos .glow-wrap{flex-basis:calc((100% - 24px)/3)}
   .menulist{gap:12px;margin-top:24px}
   .menulist .m-hi{right:-6px;top:-50px;width:56px}
+  .menulist .m-left{left:-8px;top:-54px;bottom:auto;width:62px}
   .gbtn{font-size:19px;padding:13px 44px;width:250px}
   .gbtn .ext{right:20px}
   .atabs a{padding:6px 11px;font-size:12.5px}
@@ -461,7 +463,7 @@ button.u.locked{opacity:.35;cursor:not-allowed}
   <img src="/img/theme/a-dark-2.webp" alt="" style="left:13.5%;bottom:12.5vh;--w:3.4;--r:-20deg;--f:-1;opacity:0.78;filter:blur(0.8px);animation-duration:8s;animation-delay:-5s">
   <img src="/img/theme/a-dark-1.webp" alt="" style="left:22.0%;bottom:1.0vh;--w:6.2;--r:32deg;--f:-1;opacity:0.91;filter:blur(0.3px);animation-duration:12s;animation-delay:-2s">
   <img src="/img/theme/a-dark-2.webp" alt="" style="left:33.0%;bottom:17.0vh;--w:2.6;--r:8deg;--f:1;opacity:0.73;filter:blur(1.0px);animation-duration:10s;animation-delay:-7s">
-  <img src="/img/theme/p-asteroid.webp" alt="" style="left:42.0%;bottom:-2.0vh;--w:15.5;--r:10deg;--f:-1;opacity:1.00;filter:blur(0.0px);animation-duration:13s;animation-delay:-4s">
+  <img src="/img/theme/p-asteroid.webp" alt="" style="left:45.5%;bottom:1.0vh;--w:9;--r:10deg;--f:-1;opacity:1.00;filter:blur(0.0px);animation-duration:13s;animation-delay:-4s">
   <img src="/img/theme/a-dark-2.webp" alt="" style="left:56.5%;bottom:21.0vh;--w:3.0;--r:-34deg;--f:1;opacity:0.75;filter:blur(0.9px);animation-duration:9s;animation-delay:-1s">
   <img src="/img/theme/a-dark-1.webp" alt="" style="left:63.0%;bottom:6.5vh;--w:6.8;--r:-12deg;--f:1;opacity:0.93;filter:blur(0.2px);animation-duration:10s;animation-delay:-6s">
   <img src="/img/theme/a-dark-2.webp" alt="" style="left:75.5%;bottom:0.5vh;--w:4.8;--r:22deg;--f:-1;opacity:0.86;filter:blur(0.5px);animation-duration:8s;animation-delay:-3s">
@@ -650,6 +652,14 @@ document.addEventListener('click', function (e) {
   if (t.id === 'dsync') { denahSync(); return; }
   var tl_ = t.closest('a.tim'); if (tl_) { e.preventDefault(); go(tl_.getAttribute('href').slice(1)); return; }
   var gt = t.closest('a[data-goto]'); if (gt) { e.preventDefault(); go(gt.getAttribute('href').slice(1)); return; }
+  if (t.id === 'resetlog' && !t.disabled) {
+    var c = prompt('Kosongkan SEMUA isi Log?\nSaldo, stok, dan status soal TIDAK berubah. Tidak bisa dibatalkan.\n\nKetik  RESET LOG  untuk melanjutkan:');
+    if (c === null) return;
+    if (c.trim().replace(/\s+/g, ' ').toUpperCase() !== 'RESET LOG') { toast('Konfirmasi salah \u2014 Log tidak direset'); return; }
+    adminPost('/api/admin/reset-log', { confirm: 'RESET LOG' }).then(function (d) { if (d.ok) { toast('Log sudah dikosongkan', 1); loadState(); } else toast(d.err || 'Gagal'); })
+      .catch(function (x) { if (x !== 0) toast('Gagal terkirim \u2014 cek koneksi WiFi'); });
+    return;
+  }
   var rs = t.closest('button[data-reset]'); if (rs && !rs.disabled) { doReset(rs.dataset.reset); return; }
   var b = t.closest('button[data-c]'); if (!b || b.disabled || !pos) return;
   if (b.dataset.a === 'undo') { if (!canUndo()) { toast('Undo hanya bisa dalam Mode Admin \u2014 minta admin mengaktifkannya'); return; } send('/api/undo', 'undo', b.dataset.c); }
@@ -685,7 +695,7 @@ function posSide() {
 function menuHTML() {
   var items = [['Pos Soal', '', 'pos'], ['Denah Kota', LINKS.denah], ['Wave Creep', LINKS.wave], ['Supply Drop', LINKS.sd], ['End Day', LINKS.endday]];
   var h = '<img class="ufo" src="/img/theme/ufo.webp" alt="" aria-hidden="true"><div class="hero"><img class="logo" src="/img/theme/logo.webp" alt="Schematics NLC"><p class="tag">Dashboard</p></div>'
-    + '<div class="menulist"><img class="m-hi" src="/img/theme/m-hi.webp" alt="">';
+    + '<div class="menulist"><img class="m-hi" src="/img/theme/m-hi.webp" alt=""><img class="m-left" src="/img/theme/m-astro.webp" alt="">';
   items.forEach(function (x) {
     h += x[2]
       ? '<button class="gbtn" data-pos="' + (lget('lastPos') || 'A') + '">' + x[0] + '</button>'
@@ -885,6 +895,8 @@ function resetHTML() {
     h += '<div class="adm-card"><b>' + kn(p) + '</b><span class="mut">' + n + ' aksi tercatat</span>'
       + '<button class="danger" data-reset="' + p + '"' + (n ? '' : ' disabled') + '>Reset ' + kn(p) + '</button></div>';
   });
+  h += '<div class="adm-card"><b>Log</b><span class="mut">' + S.log.length + ' entri tampil</span>'
+    + '<button class="danger" id="resetlog"' + (S.log.length ? '' : ' disabled') + '>Reset Log</button></div>';
   var d = S.denah || {};
   h += '</div><h2 style="margin-top:22px">Denah \u00b7 Google Sheets</h2>' + syncBar()
     + '<form id="denf"><textarea class="links" id="dlinks" spellcheck="false" placeholder="Link Google Sheets, satu per baris">' + esc((d.links || []).join('\n')) + '</textarea>'
