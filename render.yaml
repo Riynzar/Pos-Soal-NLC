@@ -1,0 +1,23 @@
+# Blueprint Render: New + > Blueprint > pilih repo ini.
+# PENTING: data (events.jsonl, cache Denah) disimpan di disk permanen /var/data.
+# Tanpa disk, semua data Beli/Benar HILANG setiap kali server restart / redeploy.
+services:
+  - type: web
+    name: pos-soal-nlc
+    runtime: node
+    plan: starter            # disk permanen butuh paket berbayar (Starter); paket Free tidak bisa pasang disk
+    buildCommand: "true"     # tidak ada dependensi yang perlu di-install
+    startCommand: node server.js
+    healthCheckPath: /healthz
+    numInstances: 1          # WAJIB 1: data tersimpan di memori & disk satu server
+    envVars:
+      - key: DATA_DIR
+        value: /var/data
+      - key: ADMIN_PASSWORD
+        sync: false          # isi di dashboard Render (default di kode: tecinikal)
+      - key: LOGIN_PASSWORD
+        sync: false          # isi di dashboard Render (default di kode: perempat)
+    disk:
+      name: pos-soal-data
+      mountPath: /var/data
+      sizeGB: 1

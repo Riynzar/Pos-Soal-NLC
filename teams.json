@@ -1,0 +1,327 @@
+{
+ "A": {
+  "name": "Alpha",
+  "teams": {
+   "1": {
+    "nama": "Yardan Mania",
+    "sekolah": "SMAN 3 SIDOARJO"
+   },
+   "2": {
+    "nama": "CUHLIAN",
+    "sekolah": "SMAS Al Izzah"
+   },
+   "3": {
+    "nama": "Formula 1",
+    "sekolah": "SMAK KOLESE SANTO YUSUP"
+   },
+   "4": {
+    "nama": "Lima",
+    "sekolah": "SMAN 1 Sidoarjo"
+   },
+   "5": {
+    "nama": "Namatim",
+    "sekolah": "SMA Negeri 1 Puri"
+   },
+   "6": {
+    "nama": "Tri Vector",
+    "sekolah": "SMAK Petra 5 Surabaya"
+   },
+   "7": {
+    "nama": "KASUR RUSAK",
+    "sekolah": "MAN 1 Jember"
+   },
+   "8": {
+    "nama": "IROMO 08",
+    "sekolah": "SMAS Al Izzah"
+   },
+   "9": {
+    "nama": "BLur kaabeh",
+    "sekolah": "SMA PLUS AR RAHMAT"
+   },
+   "10": {
+    "nama": "DAFTAR PAS JUMAT, \"Bismillah\"",
+    "sekolah": "SMA Raudlatul Jannah"
+   },
+   "11": {
+    "nama": "LOGINIUS 2",
+    "sekolah": "MAN 2 KOTA KEDIRI"
+   },
+   "12": {
+    "nama": "O.O.L Orang Orang Logis",
+    "sekolah": "SMAN 16 Surabaya"
+   },
+   "13": {
+    "nama": "AFH",
+    "sekolah": "SMA Zion"
+   },
+   "14": {
+    "nama": "Nama Tim",
+    "sekolah": "SMK Telkom Malang"
+   },
+   "15": {
+    "nama": "BIZON",
+    "sekolah": "SMAS AL IZZAH BATU"
+   }
+  }
+ },
+ "B": {
+  "name": "Beta",
+  "teams": {
+   "1": {
+    "nama": "Power Rangers",
+    "sekolah": "SMA Semesta"
+   },
+   "2": {
+    "nama": "Kings Gambit",
+    "sekolah": "Elyon Christian School"
+   },
+   "3": {
+    "nama": "TRICOR",
+    "sekolah": "SMA Negeri 4 Kota Pasuruan"
+   },
+   "4": {
+    "nama": "GACOER",
+    "sekolah": "SMA Al-Muslim"
+   },
+   "5": {
+    "nama": "Oxean Was Here Tim A NLC",
+    "sekolah": "SMAN 4 Kendari"
+   },
+   "6": {
+    "nama": "Juara 1 telah dijanjikan kepada tim ini 3000 tahun yang lalu",
+    "sekolah": "SMAIT Al-Uswah Surabaya"
+   },
+   "7": {
+    "nama": "Bcc Sons",
+    "sekolah": "MAN 2 TULUNGAGUNG"
+   },
+   "8": {
+    "nama": "ASE",
+    "sekolah": "SMAN 15 Surabaya"
+   },
+   "9": {
+    "nama": "SERAH",
+    "sekolah": "SMA INTEGRAL ARROHMAH"
+   },
+   "10": {
+    "nama": "ERROR 404",
+    "sekolah": "SMA PLUS AR RAHMAT"
+   },
+   "11": {
+    "nama": "Kasutu",
+    "sekolah": "SMA Al-Izzah Leadership School Batu Putra"
+   },
+   "12": {
+    "nama": "EL BP",
+    "sekolah": "SMA PLUS AR RAHMAT"
+   },
+   "13": {
+    "nama": "F warior",
+    "sekolah": "SMA Al-Izzah Leadership School Batu Putra"
+   },
+   "14": {
+    "nama": "AKU MAU GACOAN LEVEL 0",
+    "sekolah": "SMA PLUS AR-RAHMAT"
+   },
+   "15": {
+    "nama": "Capcipcup",
+    "sekolah": "SMA Kristen Petra 1"
+   }
+  }
+ },
+ "C": {
+  "name": "Charlie",
+  "teams": {
+   "1": {
+    "nama": "Apa Aja Yang Penting Jadi",
+    "sekolah": "SMAN 1 Sooko"
+   },
+   "2": {
+    "nama": "RoBoCaR PoLi",
+    "sekolah": "SMA PLUS ARRAHMAT BOJONEGORO"
+   },
+   "3": {
+    "nama": "belum punya ijazah sma",
+    "sekolah": "sman 1 gresik"
+   },
+   "4": {
+    "nama": "NAU GACOR",
+    "sekolah": "SMA DARUL ULUM 2 UNGGULAN BPPT"
+   },
+   "5": {
+    "nama": "CPKeren",
+    "sekolah": "SMAN 2 Bondowoso"
+   },
+   "6": {
+    "nama": "Cacing Hebat",
+    "sekolah": "SMAK St. Louis 1 Surabaya"
+   },
+   "7": {
+    "nama": "Kakehan Pola II",
+    "sekolah": "SMAN 2 Surabaya"
+   },
+   "8": {
+    "nama": "CnN",
+    "sekolah": "SMAN 1 Kedungwaru"
+   },
+   "9": {
+    "nama": "Ga serius dan ga bakal ikut lomba lagi",
+    "sekolah": "SMAN 3 SEMARANG"
+   },
+   "10": {
+    "nama": "Darelsim",
+    "sekolah": "Man 1 JEMBER"
+   },
+   "11": {
+    "nama": "FARRA ARETA ARANDRADITA",
+    "sekolah": "SMAN 1 KOTA BLITAR"
+   },
+   "12": {
+    "nama": "Gabut barangkali masuk teknik",
+    "sekolah": "SMK TELKOM Sidoarjo"
+   },
+   "13": {
+    "nama": "The Linuxes",
+    "sekolah": "SMAK Penabur Summarecon Bekasi"
+   },
+   "14": {
+    "nama": "mikoeru",
+    "sekolah": "SMAN 5 SURABAYA"
+   },
+   "15": {
+    "nama": "SMaRT",
+    "sekolah": "SMAIT Nurul Fikri Boarding School"
+   }
+  }
+ },
+ "D": {
+  "name": "Delta",
+  "teams": {
+   "1": {
+    "nama": "Keprok Atuh",
+    "sekolah": "SMA Negeri 1 Pandaan"
+   },
+   "2": {
+    "nama": "Pristine Cascade",
+    "sekolah": "SMA Gloria 2"
+   },
+   "3": {
+    "nama": "UHM",
+    "sekolah": "SMAS PETRA 5"
+   },
+   "4": {
+    "nama": "Zeus777",
+    "sekolah": "SMAK St. Albertus Malang"
+   },
+   "5": {
+    "nama": "pasukan menit terakhir",
+    "sekolah": "SMAN 1 Lawang"
+   },
+   "6": {
+    "nama": "Quintessential Triplets",
+    "sekolah": "SMAS Laboratorium UM"
+   },
+   "7": {
+    "nama": "Vestarium",
+    "sekolah": "SMAS Unggul Del"
+   },
+   "8": {
+    "nama": "Nama tim sudah ada",
+    "sekolah": "SMAN 1 Medan"
+   },
+   "9": {
+    "nama": "anu aja",
+    "sekolah": "MAN 2 Kota Kediri"
+   },
+   "10": {
+    "nama": "JaCin",
+    "sekolah": "SMAK FRATERAN SURABAYA"
+   },
+   "11": {
+    "nama": "A Dire Idea",
+    "sekolah": "Little Sun School"
+   },
+   "12": {
+    "nama": "Azkero",
+    "sekolah": "SMA Al-Izzah Leadership School Batu Putra"
+   },
+   "13": {
+    "nama": "TONGKIS GANK",
+    "sekolah": "MAU AMANATUL UMMAH"
+   },
+   "14": {
+    "nama": "Yukalux",
+    "sekolah": "SMA NEGERI 1 GEDANGAN"
+   },
+   "15": {
+    "nama": "Qonita Fairuzzi Rahma",
+    "sekolah": "SMAIT AL USWAH TUBAN"
+   }
+  }
+ },
+ "E": {
+  "name": "Echo",
+  "teams": {
+   "1": {
+    "nama": "Muhammad Lucky Arsandi",
+    "sekolah": "SMAN 1 GEDANGAN"
+   },
+   "2": {
+    "nama": "Daun Hijau",
+    "sekolah": "SMA NEGERI 17 SURABAYA"
+   },
+   "3": {
+    "nama": "Byte The Dust",
+    "sekolah": "MAIT Insan Kamil Sidoarjo"
+   },
+   "4": {
+    "nama": "PILARTEKNIK",
+    "sekolah": "SMAN 1 JEMBER"
+   },
+   "5": {
+    "nama": "MasAbdan",
+    "sekolah": "SMAK St. Albertus Malang"
+   },
+   "6": {
+    "nama": "Budi Kuda Balap",
+    "sekolah": "SMA Negeri 1 Tuban"
+   },
+   "7": {
+    "nama": "Blessing",
+    "sekolah": "SMAK Petra Acitya"
+   },
+   "8": {
+    "nama": "Kwetiau",
+    "sekolah": "SMA Negeri 13 Surabaya"
+   },
+   "9": {
+    "nama": "Trio Kriwul",
+    "sekolah": "SMAN 6 Surabaya"
+   },
+   "10": {
+    "nama": "Quod Erat Demonstrandum",
+    "sekolah": "SMA Katolik Santo Hendrikus"
+   },
+   "11": {
+    "nama": "ManifestingStudLan",
+    "sekolah": "SMA Taruna Nusantara Kampus Malang"
+   },
+   "12": {
+    "nama": "Well Played",
+    "sekolah": "SMA Kristen Petra 1"
+   },
+   "13": {
+    "nama": "DAJOMAR",
+    "sekolah": "MAN 2 Kota Malang"
+   },
+   "14": {
+    "nama": "VERSATILE",
+    "sekolah": "SMAN KLAKAH"
+   },
+   "15": {
+    "nama": "CELESTEE",
+    "sekolah": "SMAN 1 KRIAN"
+   }
+  }
+ }
+}

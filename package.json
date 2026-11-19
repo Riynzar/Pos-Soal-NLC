@@ -1,0 +1,14 @@
+{
+  "name": "pos-soal-schematics-nlc",
+  "version": "1.1.0",
+  "description": "Web Pos Soal & Perputaran Neleci untuk Perempat Final Schematics NLC 2026. Tanpa dependensi luar; bisa di jaringan lokal atau Render.",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}
