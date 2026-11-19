@@ -104,8 +104,8 @@ td.n,th.n{text-align:right}
 .grp td{background:var(--soft);font-weight:700;font-size:13px;color:var(--fg);text-align:center;letter-spacing:.2px}
 .code{font-weight:600;white-space:nowrap}
 .code small{display:block;font-weight:400;font-size:11px;color:var(--mut)}
-.st{font-size:13px;font-weight:600;white-space:nowrap}
-.st small{display:block;font-weight:400;opacity:.8}
+.st{font-size:13px;font-weight:600;white-space:nowrap;text-align:center}
+.st small{display:block;font-weight:400;opacity:.8;text-align:center}
 .ok{background:#2f9e57;color:#fff}
 .wait{background:#f2a900;color:#2b1d00}
 .out{background:#d64545;color:#fff}
@@ -119,7 +119,7 @@ button{font:inherit;cursor:pointer}
 .tbl th,.tbl td{padding:4px 6px}
 .tbl th,.sum th{text-align:center;font-weight:700}
 /* warna per kode soal (palet dari gambar) */
-.tbl td.code{text-align:center}
+.tbl td.code{text-align:center;font-size:16px;font-weight:700}
 .g-H{background:#c9daf8}.g-N{background:#ffe599}.g-P{background:#b6d7a8}
 .g-L{background:#f4cccc}.g-T{background:#d9d2e9}.g-M{background:#f9cb9c}
 /* garis tebal pemisah antar-inisial */
@@ -164,6 +164,16 @@ button{font:inherit;cursor:pointer}
 .adm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:12px 0}
 .adm-card{border:1px solid var(--line);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
 .adm-card b{font-size:16px}
+.logcard{flex-direction:row;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.logcard .danger{min-width:160px}
+/* pricelist di kanan kotak putih (layar lebar), di atas tabel (layar sempit) */
+.price{background:#fff;border-radius:16px;padding:12px;box-shadow:0 18px 40px -16px rgba(0,0,0,.55)}
+.price .ptitle{display:block;font-size:14px;margin:0 0 6px;text-align:center}
+.price table{width:100%;font-size:12.5px}
+.price th{font-size:11px;padding:4px 5px}
+.price td{padding:5px;white-space:nowrap}
+.price td:first-child{font-weight:600}
+@media(max-width:1240px){.price{margin:0 0 12px}.price table{max-width:520px;margin:0 auto}}
 .danger{padding:8px 10px;border:0;border-radius:6px;background:#d64545;color:#fff;font-weight:600}
 .danger:disabled{opacity:.35;cursor:not-allowed}
 
@@ -234,7 +244,7 @@ textarea.links{width:100%;min-height:70px;font:12px/1.4 monospace;padding:8px;bo
   .st{font-size:11px}
   .st small{font-size:10px}
   .code{font-size:13px}
-  .code small{font-size:10px}
+  .tbl td.code{font-size:13.5px}
   .head{flex-wrap:wrap}
   .posgrid{grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:12px}
   .pos-letter{font-size:36px}
@@ -366,6 +376,12 @@ main.teamv{max-width:min(900px,calc(100vw - 260px))}
 .kside button.on small{opacity:1}
 /* Pos Soal: kotak atas menempel, kotak bawah digulir */
 main.teamv{background:none;box-shadow:none;padding:0;overflow:visible}
+@media(min-width:1241px){
+  .kside{left:calc(max(150px,calc((100vw - 880px)/2 - 30px)) - 112px)}
+  main.teamv{max-width:min(880px,calc(100vw - 480px));margin-left:max(150px,calc((100vw - 880px)/2 - 30px))}
+  .price{position:fixed;z-index:4;top:calc(var(--hh,52px) + 20px);left:calc(max(150px,calc((100vw - 880px)/2 - 30px)) + min(880px,calc(100vw - 480px)) + 16px);width:214px}
+}
+
 .ptop{position:sticky;top:var(--hh,52px);z-index:3;background:#fff;border-radius:18px 18px 0 0;padding:14px 16px 0;box-shadow:0 18px 40px -16px rgba(0,0,0,.55)}
 .ptop .tims{margin-bottom:10px}
 .ptop .thead{margin:8px 0 0;border-bottom:3px solid var(--fg)}
@@ -722,9 +738,17 @@ function fitTop() { // posisi tempel kotak atas mengikuti tinggi header
   var hd = document.querySelector('header'); document.documentElement.style.setProperty('--hh', (hd ? hd.offsetHeight : 52) + 'px');
 }
 window.addEventListener('resize', function () { if (view.v === 'team') fitTop(); });
+function priceHTML() {
+  var NM = { H: 'Hidrasi', N: 'Nutrisi', P: 'Proteksi', L: 'Lilin', T: 'Tas', M: 'Map' }, h = '<aside class="price"><b class="ptitle">Pricelist</b><table><tr><th>Item</th><th>Beli Soal</th><th>Reward</th></tr>';
+  ['H', 'N', 'P', 'L', 'T', 'M'].forEach(function (g) {
+    var c = S.codes.filter(function (x) { return x.grp === g; })[0]; if (!c) return;
+    h += '<tr><td class="g-' + g + '">' + NM[g] + ' (' + g + ')</td><td class="n neg">\u2212' + c.price + '</td><td class="n pos">+' + c.reward + '</td></tr>';
+  });
+  return h + '</table></aside>';
+}
 function teamHTML(p, t) {
   var COLS = '<colgroup><col class="c-k"><col class="c-s"><col class="c-a"><col class="c-a"><col class="c-a"><col class="c-u"></colgroup>';
-  var h = '<div class="ptop"><div class="tims">';
+  var h = priceHTML() + '<div class="ptop"><div class="tims">';
   for (var i = 1; i <= S.tim; i++) { var e_ = eff(p, i); h += '<a class="tim' + (i === t ? ' on' : '') + '" href="#' + p + '/' + i + '" title="' + esc(tl(p, i) + ' \u00b7 ' + tn(p, i).nama) + '"><b>' + i + '</b><i class="tnm1">' + esc(tn(p, i).nama) + '</i><small' + (e_ < 0 ? ' style="color:#d33"' : '') + '>' + e_ + '</small></a>'; }
   var it = itemInfo(p, t), ef = bal(p, t) - it.spend;
   h += '</div><div class="pinfo"><div class="head"><div><h2>' + esc(tn(p, t).nama || tl(p, t)) + '</h2>' + (tn(p, t).sekolah ? '<div class="tinfo">' + esc(tn(p, t).sekolah) + '</div>' : '') + '</div><div class="bal">Saldo: <b class="' + (ef < 0 ? 'neg' : '') + '">' + ef + '</b> Neleci</div></div>';
@@ -740,7 +764,7 @@ function teamHTML(p, t) {
     var cn = fz ? ' done' : '';
     var okSB = !fz && (r[1] + r[2] + 1 <= r[0]);
     h += '<tr' + (/-1$/.test(c.code) ? ' class="gs"' : '') + '>'
-      + '<td class="code g-' + c.grp + '">' + c.code + '<small>' + sign(-c.price) + ' / ' + sign(c.reward) + '</small></td>'
+      + '<td class="code g-' + c.grp + '">' + c.code + '</td>'
       + '<td class="st ' + s.cls + '">' + s.txt + '<small>Stok ' + lf + '/' + c.limit + '</small></td>'
       + '<td class="act' + cn + '">' + btn('beli',  c.code, 'Beli',  r[0], fz || lf <= 0 || r[0] > r[1]) + '</td>'
       + '<td class="act' + cn + '">' + btn('salah', c.code, 'Salah', r[1], !okSB) + '</td>'
@@ -895,8 +919,6 @@ function resetHTML() {
     h += '<div class="adm-card"><b>' + kn(p) + '</b><span class="mut">' + n + ' aksi tercatat</span>'
       + '<button class="danger" data-reset="' + p + '"' + (n ? '' : ' disabled') + '>Reset ' + kn(p) + '</button></div>';
   });
-  h += '<div class="adm-card"><b>Log</b><span class="mut">' + S.log.length + ' entri tampil</span>'
-    + '<button class="danger" id="resetlog"' + (S.log.length ? '' : ' disabled') + '>Reset Log</button></div>';
   var d = S.denah || {};
   h += '</div><h2 style="margin-top:22px">Denah \u00b7 Google Sheets</h2>' + syncBar()
     + '<form id="denf"><textarea class="links" id="dlinks" spellcheck="false" placeholder="Link Google Sheets, satu per baris">' + esc((d.links || []).join('\n')) + '</textarea>'
@@ -908,6 +930,8 @@ function resetHTML() {
     + '<div class="admrow"><button class="btn" type="submit" form="denf">Simpan &amp; sinkron</button></div>';
   if (d.sdFound && d.sdFound.length) h += '<div class="mut" style="font-size:12px">Terbaca: ' + esc(d.sdFound.join(', ')) + '</div>';
   if (d.sdErr) h += '<div class="warnl">\u26a0 ' + esc(d.sdErr) + '</div>';
+  h += '<h2 style="margin-top:22px">Reset Log</h2><div class="adm-card logcard"><div><b>Log</b> <span class="mut">\u00b7 ' + S.log.length + ' entri tampil. Saldo, stok, dan status soal tidak berubah.</span></div>'
+    + '<button class="danger" id="resetlog"' + (S.log.length ? '' : ' disabled') + '>Reset Log</button></div>';
   return h;
 }
 function denahSync() {
