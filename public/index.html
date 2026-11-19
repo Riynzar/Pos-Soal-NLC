@@ -396,6 +396,11 @@ a.brand{text-decoration:none;cursor:pointer}
 .avatar img{width:82%;height:82%;object-fit:contain}
 .avatar:hover{border-color:var(--yel)}
 .avatar .dot{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border:2px solid #120c3c;box-shadow:none}
+.avatar.adm,.avatar.big.adm{border-color:var(--yel);box-shadow:0 0 0 3px rgba(252,178,0,.25)}
+.akey{position:absolute;top:-5px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--yel);color:var(--ink);display:flex;align-items:center;justify-content:center;border:2px solid #120c3c}
+.akey svg{width:12px;height:12px}
+.avatar.big .akey{width:26px;height:26px;top:-3px;right:-5px;border-color:#fff}
+.avatar.big .akey svg{width:16px;height:16px}
 .avatar.big{width:64px;height:64px;cursor:default;border-color:rgba(255,255,255,.6)}
 .profpop{position:absolute;right:0;top:calc(100% + 10px);z-index:30;width:210px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px;
   background:#fff;color:var(--fg);border-radius:16px;box-shadow:0 18px 40px -10px rgba(0,0,0,.55)}
@@ -688,8 +693,10 @@ function render() {
   if (isAdm(view.v) && !adminPw) { go('home'); return; } // akun umum tidak punya halaman admin
   var h = '<a class="brand" href="/home" data-go="home" title="Kembali ke Dashboard"><img class="brain" src="/img/theme/favicon-192.png" alt=""><img src="/img/theme/logo.webp" alt="Schematics NLC">' + (isAdm(view.v) ? '<span>ADMIN</span>' : '') + '</a><span class="sp"></span>';
   if (!adminPw && view.v === 'team') h += modeTok ? '<button class="hbtn modeon" id="modeoff">Keluar Mode Admin</button>' : '<button class="hbtn" id="modeon">Mode Admin</button>';
-  h += '<div class="prof"><button class="avatar" id="prof" aria-label="Profil" aria-haspopup="true"><img src="/img/theme/m-wave.webp" alt=""><span id="dot" class="dot"></span></button>'
-    + '<div class="profpop" id="profpop" hidden><span class="avatar big"><img src="/img/theme/m-wave.webp" alt=""></span>'
+  var KEY = '<span class="akey" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M12 12h9m-3 0v3.5m-3-3.5v2.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span>';
+  var AV = adminPw ? 'm-astro' : 'm-wave', AC = adminPw ? ' adm' : '';
+  h += '<div class="prof"><button class="avatar' + AC + '" id="prof" aria-label="Profil' + (adminPw ? ' admin' : '') + '" aria-haspopup="true"><img src="/img/theme/' + AV + '.webp" alt="">' + (adminPw ? KEY : '') + '<span id="dot" class="dot"></span></button>'
+    + '<div class="profpop" id="profpop" hidden><span class="avatar big' + AC + '"><img src="/img/theme/' + AV + '.webp" alt="">' + (adminPw ? KEY : '') + '</span>'
     + '<b class="pname">' + esc(user) + '</b><small class="prole">' + (adminPw ? 'Admin' : 'Panitia') + '</small>'
     + (adminPw ? '<a class="plink" href="/admin" data-go="hasil">Halaman Admin</a>' : '')
     + '<button class="pout" id="logout">Keluar</button></div></div>';
