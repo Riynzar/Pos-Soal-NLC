@@ -353,13 +353,42 @@ main.teamv{max-width:min(900px,calc(100vw - 260px))}
 @media(min-width:521px) and (max-width:1160px){main.teamv{margin-left:132px;margin-right:16px}}
 .poswrap{display:block}
 .kside{position:fixed;z-index:6;top:76px;left:max(20px,calc((100vw - 900px)/2 - 116px));display:flex;flex-direction:column;gap:12px}
-.kside button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:92px;height:92px;border-radius:20px;border:0;
-  background:#fff;color:var(--ink);cursor:pointer;font:inherit;box-shadow:0 10px 26px -10px rgba(0,0,0,.6);transition:background .15s,transform .12s,box-shadow .15s}
+.kside button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:92px;height:92px;border-radius:22px;cursor:pointer;font:inherit;color:#fff;
+  background:linear-gradient(180deg,rgba(255,255,255,.18),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.3);
+  -webkit-backdrop-filter:blur(14px) saturate(150%);backdrop-filter:blur(14px) saturate(150%);
+  box-shadow:0 10px 30px -12px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.35);transition:background .2s,border-color .2s,transform .15s}
 .kside button b{font-size:34px;line-height:1;font-weight:800}
-.kside button small{font-size:11.5px;color:var(--mut);font-weight:600}
-.kside button:hover{transform:translateX(3px);background:#fffbe9}
-.kside button.on{background:var(--yel);box-shadow:0 10px 26px -10px rgba(0,0,0,.6),inset 0 -4px 0 rgba(0,0,0,.14),0 0 0 4px rgba(252,178,0,.3)}
-.kside button.on small{color:var(--ink)}
+.kside button small{font-size:11.5px;font-weight:600;opacity:.8}
+.kside button:hover{transform:translateX(3px);border-color:rgba(252,178,0,.75)}
+.kside button.on{background:linear-gradient(180deg,rgba(255,190,60,.62),rgba(247,144,47,.42));border-color:rgba(255,205,110,.9);color:#fff;
+  box-shadow:0 12px 30px -10px rgba(247,144,47,.65),0 0 0 3px rgba(252,178,0,.22),inset 0 1px 0 rgba(255,255,255,.45)}
+.kside button.on small{opacity:1}
+/* Pos Soal: kotak atas menempel, kotak bawah digulir */
+main.teamv{background:none;box-shadow:none;padding:0;overflow:visible}
+.ptop{position:sticky;top:var(--hh,52px);z-index:3;background:#fff;border-radius:18px 18px 0 0;padding:14px 16px 0;box-shadow:0 18px 40px -16px rgba(0,0,0,.55)}
+.ptop .tims{margin-bottom:10px}
+.ptop .thead{margin:8px 0 0;border-bottom:3px solid var(--fg)}
+.pbody{background:#fff;border-radius:0 0 18px 18px;padding:0 16px 16px;box-shadow:0 18px 50px -12px rgba(0,0,0,.55)}
+.pbody .tbody tr:first-child td{border-top:0}
+/* header: logo otak, profil */
+a.brand{text-decoration:none;cursor:pointer}
+.brand img.brain{height:30px;width:30px;object-fit:contain}
+.prof{position:relative;flex:none}
+.avatar{position:relative;display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;padding:0;cursor:pointer;
+  background:radial-gradient(circle at 35% 30%,#4e3472,#160f47 72%);border:2px solid rgba(255,255,255,.35)}
+.avatar img{width:82%;height:82%;object-fit:contain}
+.avatar:hover{border-color:var(--yel)}
+.avatar .dot{position:absolute;right:-1px;bottom:-1px;width:11px;height:11px;border:2px solid #120c3c;box-shadow:none}
+.avatar.big{width:64px;height:64px;cursor:default;border-color:rgba(255,255,255,.6)}
+.profpop{position:absolute;right:0;top:calc(100% + 10px);z-index:30;width:210px;display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px;
+  background:#fff;color:var(--fg);border-radius:16px;box-shadow:0 18px 40px -10px rgba(0,0,0,.55)}
+.profpop[hidden]{display:none}
+.profpop .pname{font-size:16px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.profpop .prole{color:var(--mut);margin-top:-4px}
+.profpop .plink{width:100%;text-align:center;padding:8px;border-radius:10px;border:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:600;font-size:14px}
+.profpop .plink:hover{background:var(--soft)}
+.profpop .pout{width:100%;padding:9px;border:0;border-radius:10px;background:#d63a3a;color:#fff;font:inherit;font-weight:700;cursor:pointer}
+.profpop .pout:hover{background:#bf2f2f}
 @media(max-height:620px){.kside{top:62px;gap:8px}.kside button{width:76px;height:76px}.kside button b{font-size:28px}}
 button.u.locked{opacity:.35;cursor:not-allowed}
 /* dialog Mode Admin */
@@ -386,7 +415,6 @@ button.u.locked{opacity:.35;cursor:not-allowed}
   .pickpos .pos-letter{font-size:44px}
   .hero .m-hi{width:64px;left:0;bottom:-26px}
   .brand span{display:none}
-  .inpos .brand{display:none}
   .hero .tag{font-size:13px}
   .pickpos .m-hi{width:60px;top:-54px}
   .pickpos .posgrid{gap:12px}
@@ -397,12 +425,20 @@ button.u.locked{opacity:.35;cursor:not-allowed}
   .gbtn{font-size:19px;padding:13px 44px;width:250px}
   .gbtn .ext{right:20px}
   .atabs a{padding:6px 11px;font-size:12.5px}
-  main.teamv{max-width:none}
-  .kside{position:sticky;top:50px;left:auto;flex-direction:row;gap:8px;margin:-10px -10px 10px;padding:10px;background:#fff;border-radius:14px 14px 0 0;box-shadow:0 6px 10px -8px rgba(0,0,0,.25)}
-  .kside button{flex:1;width:auto;height:58px;border-radius:14px;border:1px solid var(--line);box-shadow:none}
+  main.teamv{max-width:none;margin:8px 8px 30px!important}
+  .kside{position:static;flex-direction:row;gap:6px;margin:0 0 10px}
+  .kside button{flex:1;width:auto;height:58px;border-radius:14px}
   .kside button b{font-size:24px}
   .kside button small{font-size:9px}
   .kside button:hover{transform:none}
+  /* HP: yang menempel hanya baris tab tim + judul tabel; nama/saldo/item ikut tergulir */
+  .ptop{display:contents}
+  .ptop .tims{position:sticky;top:var(--hh,52px);z-index:3;display:flex;overflow-x:auto;gap:4px;margin:0;padding:8px 10px;background:#fff;border-radius:16px 16px 0 0;scrollbar-width:none}
+  .ptop .tims::-webkit-scrollbar{display:none}
+  .ptop .tims .tim{flex:0 0 66px}
+  .ptop .pinfo{background:#fff;padding:6px 10px 0}
+  .ptop .thead{position:sticky;top:calc(var(--hh,52px) + 66px);z-index:3;margin:0;background:#fff;box-shadow:0 6px 8px -6px rgba(0,0,0,.25)}
+  .pbody{padding:0 10px 14px}
   .hbtn{padding:5px 9px;font-size:12px}
   .srow{grid-template-columns:1fr;gap:4px;margin-bottom:10px}
   .slab{padding:5px 10px}
@@ -495,12 +531,15 @@ function parseHash() {
     return { v: ['dash', 'log', 'reset'].indexOf(h) >= 0 ? h : 'hasil' };
   }
   var m = /^([A-E])(?:\/(\d+))?$/.exec(h);
-  if (m) { pos = m[1]; var t = +m[2] || +sget('tim' + pos) || 1; return { v: 'team', t: Math.min(Math.max(t, 1), 15) }; }
+  if (m || /^\/pos-soal\/?$/.test(location.pathname)) {
+    pos = m ? m[1] : (lget('lastPos') || 'A'); var t = (m && +m[2]) || +sget('tim' + pos) || 1;
+    return { v: 'team', t: Math.min(Math.max(t, 1), 15) };
+  }
   pos = ''; return { v: 'home' };
 }
 function route() { view = parseHash(); if (view.v === 'team') { store('tim' + pos, view.t); lset('lastPos', pos); } render(); window.scrollTo(0, 0); }
 function go(h) { // pindah halaman tanpa reload; alamat: /admin#... untuk halaman admin, /home#... untuk lainnya
-  var url = (ADMIN_RE.test(h) ? '/admin' : '/home') + (h && h !== 'home' && h !== 'hasil' ? '#' + h : '');
+  var url = ADMIN_RE.test(h) ? '/admin' + (h !== 'hasil' ? '#' + h : '') : /^[A-E](\/\d+)?$/.test(h) ? '/pos-soal#' + h : '/home';
   if (location.pathname + location.hash !== url) history.pushState(null, '', url);
   route();
 }
@@ -597,16 +636,19 @@ function send(path, a, code) {
     .then(function () { delete busy[key]; });
 }
 function navOpen(v) { document.body.classList.toggle('navon', v); }
-document.addEventListener('keydown', function (e) { if (e.key === 'Escape') navOpen(false); });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && $('#profpop')) $('#profpop').hidden = true; });
 document.addEventListener('click', function (e) {
   var t = e.target;
+  if (t.closest('#prof')) { var pp = $('#profpop'); pp.hidden = !pp.hidden; return; }
+  if ($('#profpop') && !$('#profpop').hidden && !t.closest('#profpop')) $('#profpop').hidden = true;
   var p = t.closest('[data-pos]'); if (p) { enterPos(p.dataset.pos); return; }
   if (t.id === 'logout') { logout(); return; }
   if (t.id === 'modeon') { $('#modepw').value = ''; $('#modeov').hidden = false; setTimeout(function () { $('#modepw').focus(); }, 30); return; }
   if (t.id === 'modecancel') { $('#modeov').hidden = true; return; }
   if (t.id === 'modeoff') { modeTok = ''; render(); toast('Mode Admin dimatikan', 1); return; }
-  var dg = t.closest('[data-go]'); if (dg) { go(dg.dataset.go); return; }
+  var dg = t.closest('[data-go]'); if (dg) { e.preventDefault(); go(dg.dataset.go); return; }
   if (t.id === 'dsync') { denahSync(); return; }
+  var tl_ = t.closest('a.tim'); if (tl_) { e.preventDefault(); go(tl_.getAttribute('href').slice(1)); return; }
   var gt = t.closest('a[data-goto]'); if (gt) { e.preventDefault(); go(gt.getAttribute('href').slice(1)); return; }
   var rs = t.closest('button[data-reset]'); if (rs && !rs.disabled) { doReset(rs.dataset.reset); return; }
   var b = t.closest('button[data-c]'); if (!b || b.disabled || !pos) return;
@@ -618,16 +660,19 @@ document.addEventListener('click', function (e) {
 function render() {
   if (!S || !user) return;
   if (isAdm(view.v) && !adminPw) { go('home'); return; } // akun umum tidak punya halaman admin
-  var h = '<span class="brand"><img src="/img/theme/logo.webp" alt="Schematics NLC">' + (isAdm(view.v) ? '<span>ADMIN</span>' : '') + '</span><span class="sp"></span>';
-  if (adminPw) h += isAdm(view.v) ? '<button class="hbtn" data-go="home">Dashboard</button>' : '<button class="hbtn" data-go="hasil">Admin</button>';
-  else if (view.v === 'team') h += modeTok ? '<button class="hbtn modeon" id="modeoff">Keluar Mode Admin</button>' : '<button class="hbtn" id="modeon">Mode Admin</button>';
-  h += '<span class="who" title="' + (adminPw ? 'Login sebagai admin' : 'Login sebagai umum') + '">' + esc(user) + '</span>'
-    + '<button class="hbtn exitb" id="logout">Keluar</button><span id="dot" class="dot"></span>';
+  var h = '<a class="brand" href="/home" data-go="home" title="Kembali ke Dashboard"><img class="brain" src="/img/theme/favicon-192.png" alt=""><img src="/img/theme/logo.webp" alt="Schematics NLC">' + (isAdm(view.v) ? '<span>ADMIN</span>' : '') + '</a><span class="sp"></span>';
+  if (!adminPw && view.v === 'team') h += modeTok ? '<button class="hbtn modeon" id="modeoff">Keluar Mode Admin</button>' : '<button class="hbtn" id="modeon">Mode Admin</button>';
+  h += '<div class="prof"><button class="avatar" id="prof" aria-label="Profil" aria-haspopup="true"><img src="/img/theme/m-wave.webp" alt=""><span id="dot" class="dot"></span></button>'
+    + '<div class="profpop" id="profpop" hidden><span class="avatar big"><img src="/img/theme/m-wave.webp" alt=""></span>'
+    + '<b class="pname">' + esc(user) + '</b><small class="prole">' + (adminPw ? 'Admin' : 'Panitia') + '</small>'
+    + (adminPw ? '<a class="plink" href="/admin" data-go="hasil">Halaman Admin</a>' : '')
+    + '<button class="pout" id="logout">Keluar</button></div></div>';
   $('#head').innerHTML = h; $('#head').className = 'bar' + (pos ? ' inpos' : ''); dot();
   var draft = view.v === 'reset' && $('#dlinks') ? [$('#dlinks').value, $('#sdlinks') && $('#sdlinks').value] : null;
   $('#main').className = view.v === 'home' ? 'home' : view.v === 'team' ? 'teamv' : '';
   $('#main').innerHTML = isAdm(view.v) ? adminTabs() + (view.v === 'reset' ? resetHTML() : view.v === 'dash' ? dashHTML() : view.v === 'log' ? logHTML() : view.v === 'neleci' ? neleciHTML(view.k) : hasilHTML())
     : view.v === 'team' ? posSide() + '<div class="pmain">' + teamHTML(pos, view.t) + '</div></div>' : menuHTML();
+  if (view.v === 'team') fitTop();
   var ap = $('#admpw'); if (ap && !ap.value) ap.focus();
   if (draft && $('#dlinks')) { $('#dlinks').value = draft[0]; if (draft[1] != null && $('#sdlinks')) $('#sdlinks').value = draft[1]; }
 }
@@ -663,15 +708,21 @@ function homeHTML() {
   return h;
 }
 
+function fitTop() { // posisi tempel kotak atas mengikuti tinggi header
+  var hd = document.querySelector('header'); document.documentElement.style.setProperty('--hh', (hd ? hd.offsetHeight : 52) + 'px');
+}
+window.addEventListener('resize', function () { if (view.v === 'team') fitTop(); });
 function teamHTML(p, t) {
-  var h = '<div class="tims">';
+  var COLS = '<colgroup><col class="c-k"><col class="c-s"><col class="c-a"><col class="c-a"><col class="c-a"><col class="c-u"></colgroup>';
+  var h = '<div class="ptop"><div class="tims">';
   for (var i = 1; i <= S.tim; i++) { var e_ = eff(p, i); h += '<a class="tim' + (i === t ? ' on' : '') + '" href="#' + p + '/' + i + '" title="' + esc(tl(p, i) + ' \u00b7 ' + tn(p, i).nama) + '"><b>' + i + '</b><i class="tnm1">' + esc(tn(p, i).nama) + '</i><small' + (e_ < 0 ? ' style="color:#d33"' : '') + '>' + e_ + '</small></a>'; }
   var it = itemInfo(p, t), ef = bal(p, t) - it.spend;
-  h += '</div><div class="head"><div><h2>' + esc(tn(p, t).nama || tl(p, t)) + '</h2>' + (tn(p, t).sekolah ? '<div class="tinfo">' + esc(tn(p, t).sekolah) + '</div>' : '') + '</div><div class="bal">Saldo: <b class="' + (ef < 0 ? 'neg' : '') + '">' + ef + '</b> Neleci</div></div>';
+  h += '</div><div class="pinfo"><div class="head"><div><h2>' + esc(tn(p, t).nama || tl(p, t)) + '</h2>' + (tn(p, t).sekolah ? '<div class="tinfo">' + esc(tn(p, t).sekolah) + '</div>' : '') + '</div><div class="bal">Saldo: <b class="' + (ef < 0 ? 'neg' : '') + '">' + ef + '</b> Neleci</div></div>';
   h += '<div class="items">' + ['S', 'H', 'N', 'P', 'L', 'T', 'M'].map(function (L) {
     return '<span class="g-' + L + '"' + (L === 'S' ? ' style="background:#eee"' : '') + '>' + L + ' ' + it.cnt[L] + (L !== 'S' ? ' (kupon ' + (it.ben[L] || 0) + ')' : '') + (it.sd[L] ? ' <b class="sdb" title="Dapat dari Supply Drop (gratis)">SD</b>' : '') + '</span>';
   }).join('') + '</div>' + it.warn.map(function (w) { return '<div class="warnl">\u26a0 ' + esc(w) + '</div>'; }).join('');
-  h += '<div class="scroll"><table class="tbl"><colgroup><col class="c-k"><col class="c-s"><col class="c-a"><col class="c-a"><col class="c-a"><col class="c-u"></colgroup><tr><th>Kode</th><th>Status</th><th>Beli</th><th>Salah</th><th>Benar</th><th></th></tr>';
+  h += '</div><table class="tbl thead">' + COLS + '<tr><th>Kode</th><th>Status</th><th>Beli</th><th>Salah</th><th>Benar</th><th></th></tr></table></div>'
+    + '<div class="pbody"><table class="tbl tbody">' + COLS;
   var cur = '';
   S.codes.forEach(function (c) {
     if (c.cat !== cur) { cur = c.cat; h += '<tr class="grp"><td colspan="6">' + cur + '</td></tr>'; }
@@ -687,7 +738,7 @@ function teamHTML(p, t) {
       + '<td class="act"><button class="u' + (canUndo() ? '' : ' locked') + '" data-a="undo" data-c="' + c.code + '" title="' + (canUndo() ? 'Batalkan aksi terakhir' : 'Undo hanya dalam Mode Admin') + '"' + (any ? '' : ' disabled') + '>\u21a9</button></td>'
       + '</tr>';
   });
-  h += '</table></div><h3>Rekap</h3><table class="sum"><tr><th>Kategori</th><th>Kode</th><th class="n">Jumlah Benar</th></tr>';
+  h += '</table><h3>Rekap</h3><table class="sum"><tr><th>Kategori</th><th>Kode</th><th class="n">Jumlah Benar</th></tr>';
   var all = 0;
   [['Essential','H'],['Essential','N'],['Essential','P'],['Non-Essential','L'],['Non-Essential','T'],['Non-Essential','M']].forEach(function (g) {
     var n = S.codes.filter(function (c) { return c.grp === g[1] && row(p, t, c.code)[2] >= 1; }).length; all += n;
@@ -697,7 +748,7 @@ function teamHTML(p, t) {
   return h + '<tr><th colspan="2">Total</th><th class="n">' + all + '</th></tr></table>'
     + '<div class="bd rincian"><b>Rincian saldo:</b> modal ' + fl.modal + ' \u2212 beli soal ' + fl.soal + ' + reward Benar ' + fl.masuk
     + ' \u2212 beli barang di Pos Denah ' + fl.item.spend + ' = <b>' + fl.saldo + '</b> Neleci'
-    + '<br>Data Denah ' + (S.denah && S.denah.at ? 'disinkron ' + ago(S.denah.at) : 'belum tersinkron') + '</div>';
+    + '<br>Data Denah ' + (S.denah && S.denah.at ? 'disinkron ' + ago(S.denah.at) : 'belum tersinkron') + '</div></div>';
 }
 
 function btn(a, code, label, n, dis) {
@@ -905,7 +956,7 @@ $('#askf').addEventListener('submit', function (e) {
       lset('tok', tok); lset('role', d.role); lset('user', user); lset('lastUser', user);
       $('#ask').hidden = true; $('#toast').className = '';
       if (d.role === 'admin') history.replaceState(null, '', '/admin');           // admin langsung ke halaman admin
-      else if (!/^#[A-E]/.test(location.hash)) history.replaceState(null, '', '/home');
+      else if (!/^\/pos-soal/.test(location.pathname) && !/^#[A-E]/.test(location.hash)) history.replaceState(null, '', '/home');
       view = parseHash(); connect(); loadState();
     })
     .catch(function () { toast('Gagal terhubung ke server \u2014 cek koneksi WiFi'); });

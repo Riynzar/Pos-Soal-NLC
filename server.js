@@ -412,7 +412,7 @@ const server = http.createServer(async (req, res) => {
   // di Render semua akses lewat proxy: IP asli ada di X-Forwarded-For
   const ip = (String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || '').replace('::ffff:', '');
   try {
-    if (req.method === 'GET' && (url === '/' || url === '/index.html' || url === '/home' || url === '/admin')) {
+    if (req.method === 'GET' && (url === '/' || url === '/index.html' || url === '/home' || url === '/admin' || url === '/pos-soal')) {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
       return res.end(fs.readFileSync(path.join(__dirname, 'public', 'index.html')));
     }
